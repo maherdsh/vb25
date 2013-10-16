@@ -159,6 +159,8 @@ class VRAY_OBP_wrapper(VRayObjectPanel, bpy.types.Panel):
 			col= split.column()
 		col.prop(plugin, 'matte_for_secondary_rays')
 
+		layout.prop(plugin, 'generate_render_elements')
+
 
 class VRAY_OBP_render(VRayObjectPanel, bpy.types.Panel):
 	bl_label = "Render"

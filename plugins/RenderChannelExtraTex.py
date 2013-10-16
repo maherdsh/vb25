@@ -95,7 +95,7 @@ def add_properties(parent_struct):
 '''
   OUTPUT
 '''
-def write(bus, render_channel, name= None):
+def write(bus, render_channel, sce= None, name= None):
 	ofile= bus['files']['scene']
 	scene= bus['scene']
 
@@ -105,7 +105,9 @@ def write(bus, render_channel, name= None):
 		return
 	
 	# Store mtex context
-	context_mtex= bus['mtex']
+	context_mtex = None
+	if 'mtex' in bus:
+		context_mtex = bus['mtex']
 
 	bus['mtex']= {}
 	bus['mtex']['env']=     True # This is needed!
@@ -118,7 +120,8 @@ def write(bus, render_channel, name= None):
 	texmap= write_texture(bus)
 
 	# Restore mtex context
-	bus['mtex']= context_mtex
+	if context_mtex:
+		bus['mtex'] = context_mtex
 
 	ofile.write("\n%s %s {"%(PLUG, clean_string(channel_name)))
 	for param in PARAMS:

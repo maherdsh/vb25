@@ -54,6 +54,7 @@ PARAMS= (
 	#'alpha_contribution_tex',
 	#'shadow_brightness_tex',
 	#'reflection_filter_tex',
+	'generate_render_elements',
 	'trace_depth',
 	#'channels'
 )
@@ -152,6 +153,12 @@ def add_properties(rna_pointer):
 		name= "Affect alpha",
 		description= "Turn this on to make shadows affect the alpha contribution of the matte surface",
 		default= False
+	)
+
+	MtlWrapper.generate_render_elements = BoolProperty(
+		name = "Generate Render Elements",
+		description = "Setting this to false makes objects to not affect the render elements",
+		default = True
 	)
 
 	MtlWrapper.shadow_tint_color= FloatVectorProperty(

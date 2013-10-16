@@ -391,6 +391,8 @@ class VRAY_MP_wrapper(VRayMaterialPanel, bpy.types.Panel):
 			col= split.column()
 		col.prop(MtlWrapper, 'matte_for_secondary_rays')
 
+		layout.prop(plugin, 'generate_render_elements')
+
 
 class VRAY_MP_outline(VRayMaterialPanel, bpy.types.Panel):
 	bl_label   = "Outline"
