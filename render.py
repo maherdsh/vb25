@@ -1864,7 +1864,7 @@ def run(bus):
 		proc.imgFile   = image_file
 		proc.scene     = scene
 
-		proc.set_params()
+		proc.set_params(bus=bus)
 		proc.run()
 
 		feedback_image = os.path.join(get_ram_basedir(), "vrayblender_%s_stream.jpg"%(get_username()))

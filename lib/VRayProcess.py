@@ -42,6 +42,12 @@ if sys.platform != 'win32':
     import fcntl
 
 
+def Quotes(path):
+    if sys.platform != 'win32':
+        return '"%s"' % (path)
+    return path
+
+
 class VRayProcess():
     # V-Ray process
     process    = None
@@ -59,7 +65,9 @@ class VRayProcess():
     verboseLevel  = None
     cmdMode       = None
 
+    bus = None
     scene = None
+
     VRayScene    = None
     VRayExporter = None
     VRayDR       = None
@@ -78,7 +86,9 @@ class VRayProcess():
         pass
 
 
-    def set_params(self, params=None):
+    def set_params(self, bus=None, params=None):
+        self.bus = bus
+
         self.VRayScene    = self.scene.vray
         self.VRayExporter = self.VRayScene.exporter
         self.VRayDR       = self.VRayScene.VRayDR
@@ -109,6 +119,13 @@ class VRayProcess():
             self.params.append(self.verboseLevel)
             self.params.append('-showProgress=')
             self.params.append(self.showProgress)
+
+        if self.VRayDR.on:
+            if len(self.VRayDR.nodes):
+                self.params.append('-distributed=1')
+                self.params.append('-portNumber=%i' % self.VRayDR.port)
+                self.params.append('-renderhost=%s' % Quotes(';'.join([n.address for n in self.VRayDR.nodes])))
+                self.params.append('-include=%s' % Quotes(self.bus['filenames']['DR']['shared_dir'] + os.sep))
 
         # Setup command mode
         # Disable VFB
