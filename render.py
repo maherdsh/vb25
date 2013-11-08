@@ -1826,13 +1826,17 @@ def run(bus):
 				log_window.append("VRAYSTANDALONE")
 				log_window.append("-geometry")
 				log_window.append("90x10")
+				log_window.append("-e")
 				log_window.extend(params)
 			else:
 				log_window.extend(LOG_TERMINAL[VRayExporter.log_window_type].split(" "))
-				log_window.append("-e")
 				if VRayExporter.log_window_type == "GNOME":
-					log_window.append("\"%s\"" % (" ".join(params)))
+					log_window.append("-x")
+					log_window.append("sh")
+					log_window.append("-c")
+					log_window.append(" ".join(params))
 				else:
+					log_window.append("-e")
 					log_window.extend(params)
 			params = log_window
 
