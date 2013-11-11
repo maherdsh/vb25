@@ -149,6 +149,9 @@ class VRAY_WP_effects(VRayWorldPanel, bpy.types.Panel):
 			elif effect.type == 'TOON':
 				PLUGINS['SETTINGS']['SettingsEnvironment'].draw_VolumeVRayToon(context, box, effect)
 
+			elif effect.type == 'SFADE':
+				PLUGINS['SETTINGS']['SettingsEnvironment'].draw_SphereFade(context, box, effect)
+
 
 bpy.utils.register_class(VRAY_WP_environment)
 bpy.utils.register_class(VRAY_WP_effects)
