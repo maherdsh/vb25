@@ -820,9 +820,9 @@ def Quotes(path):
 
 
 # Create directory
-def create_dir(directory):
+def create_dir(directory, pathOnly=False):
 	directory = path_sep_to_unix(directory)
-	if not os.path.exists(directory):
+	if not pathOnly and not os.path.exists(directory):
 		debug(None, "Creating directory \"%s\"... " % directory, newline= False, cr= False)
 		try:
 			os.mkdir(directory)
@@ -1157,7 +1157,7 @@ def init_files(bus):
 		bus['files']['colorMapping'] = open(cmFilepath, 'w')
 
 	# Render output dir
-	bus['filenames']['output'] = create_dir(output_filepath)
+	bus['filenames']['output'] = create_dir(output_filepath, pathOnly=VRayExporter.auto_save_render)
 
 	# Render output file name
 	ext = SettingsOutput.img_format.lower()
