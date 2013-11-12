@@ -1157,7 +1157,7 @@ def init_files(bus):
 		bus['files']['colorMapping'] = open(cmFilepath, 'w')
 
 	# Render output dir
-	bus['filenames']['output'] = create_dir(output_filepath, pathOnly=VRayExporter.auto_save_render)
+	bus['filenames']['output'] = create_dir(output_filepath, pathOnly=not VRayExporter.auto_save_render)
 
 	# Render output file name
 	ext = SettingsOutput.img_format.lower()
