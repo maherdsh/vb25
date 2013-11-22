@@ -1137,6 +1137,13 @@ def init_files(bus):
 
 	export_directory = create_dir(export_filepath)
 
+	# XXX: Ugly... If there were some error there could be some open files left
+	#
+	for key in bus['files']:
+		f = bus['files']
+		if f and not f.closed:
+			f.close()
+
 	for key in ('geometry', 'lights', 'materials', 'textures', 'nodes', 'camera', 'scene', 'environment'):
 		if key == 'geometry':
 			filepath = os.path.join(export_directory, "%s_geometry_00.vrscene" % (export_filename))
