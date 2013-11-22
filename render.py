@@ -462,7 +462,6 @@ def write_GeomMayaHair(bus, ps, hair_geom_name):
 	ofile.write("\n}\n")
 
 
-
 '''
   SETTINGS
 '''
@@ -505,27 +504,6 @@ def write_settings(bus):
 	# Preview settings are in different parts of the file,
 	# because smth must be set before and smth after.
 	if bus['preview']:
-		# Material / texture preview settings
-		mode= 'MATERIAL'
-		tex_name= "Color(0.5,0.5,0.5)"
-		for ob in scene.objects:
-			if ob.name == 'texture' and ob.is_visible(scene):
-				mode= 'TEXTURE'
-				tex_name= clean_string("MAtextureMT00TE%s" % ob.material_slots[0].material.texture_slots[0].texture.name)
-				break
-
-		# For texture preview we need to set texture as Diffuse
-		# no matter how it's used in material.
-		if mode == 'TEXTURE':
-			bus['files']['scene'].write("\n// Texture preview material")
-			bus['files']['scene'].write("\nBRDFLight BRDFPreviewTexture {")
-			bus['files']['scene'].write("\n\tcolor= %s;" % tex_name)
-			bus['files']['scene'].write("\n\tcolorMultiplier= 4.0;")
-			bus['files']['scene'].write("\n}\n")
-			bus['files']['scene'].write("\nMtlSingleBRDF MAtexture {")
-			bus['files']['scene'].write("\n\tbrdf= BRDFPreviewTexture;")
-			bus['files']['scene'].write("\n}\n")
-
 		bus['files']['scene'].write("\n// Preview settings")
 		bus['files']['scene'].write("\nSettingsDMCSampler {")
 		bus['files']['scene'].write("\n\tadaptive_amount= 0.99;")
@@ -600,9 +578,6 @@ def write_settings(bus):
 		for includeNode in Includer.nodes:
 			if includeNode.use == True:
 				ofile.write("\n#include \"" + bpy.path.abspath(includeNode.scene) + "\"\t\t // " + includeNode.name)
-
-	
-
 
 
 '''
@@ -1161,20 +1136,46 @@ def write_node(bus):
 		ofile.write("\n\tshadows_visibility= %s;" %     a(scene, (0 if ob in visibility['shadows'] else 1)))
 		ofile.write("\n}\n")
 
+	if bus['preview'] and ob.name == 'texture':
+		def getPreviewTexture(ob):
+			if not len(ob.material_slots):
+				return None
+			if not ob.material_slots[0].material:
+				return None
+			ma = ob.material_slots[0].material
+			if not len(ma.texture_slots):
+				return None
+			slot = ma.texture_slots[0]
+			if not slot.texture:
+				return None
+			tex = slot.texture
+			tex_name = clean_string("MAtextureMT00TE%s" % tex.name)
+			if tex.vray.texture_coords == 'ORCO':
+				tex_name += 'ORCOtexture'
+			return tex_name
+
+		tex_name = getPreviewTexture(ob)
+
+		if tex_name:
+			material = 'MATexPreview'
+			ofile.write("\n// Texture preview material")
+			ofile.write("\nBRDFLight BRDFTexPreview {")
+			ofile.write("\n\tcolor=%s;" % tex_name)
+			ofile.write("\n\tcolorMultiplier=3.0;")
+			ofile.write("\n}\n")
+			ofile.write("\nMtlSingleBRDF %s {" % material)
+			ofile.write("\n\tbrdf=BRDFTexPreview;")
+			ofile.write("\n}\n")
+
 	ofile.write("\nNode %s {" % node_name)
-	ofile.write("\n\tobjectID= %d;" % bus['node'].get('objectID', ob.pass_index))
-	ofile.write("\n\tgeometry= %s;" % bus['node']['geometry'])
-	ofile.write("\n\tmaterial= %s;" % material)
+	ofile.write("\n\tobjectID=%d;" % bus['node'].get('objectID', ob.pass_index))
+	ofile.write("\n\tgeometry=%s;" % bus['node']['geometry'])
+	ofile.write("\n\tmaterial=%s;" % material)
 	if 'particle' in bus['node'] and 'visible' in bus['node']['particle']:
-		ofile.write("\n\tvisible= %s;" % a(scene, bus['node']['particle']['visible']))
-	ofile.write("\n\ttransform= %s;" % a(scene, transform(matrix)))
-
-	# TODO: check why this was needed.
-	#if not (('dupli' in bus['node'] and 'name' in bus['node']['dupli']) or ('particle' in bus['node'] and 'name' in bus['node']['particle'])):
-	#	ofile.write("\n\tlights= List(%s);" % (','.join(lights)))
-
+		ofile.write("\n\tvisible=%s;" % a(scene, bus['node']['particle']['visible']))
+	ofile.write("\n\ttransform=%s;" % a(scene, transform(matrix)))
 	if not bus['preview']:
-		ofile.write("\n\tlights= List(%s);" % (','.join(lights)))
+		ofile.write("\n\tlights=List(%s);" % (','.join(lights)))
 	ofile.write("\n}\n")
 
 
