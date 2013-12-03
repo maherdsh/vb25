@@ -25,11 +25,11 @@
 '''
 
 TYPE= 'RENDERCHANNEL'
-ID=   'RENDERID'
-NAME= 'RenderID'
-PLUG= 'RenderChannelRenderID'
+ID=   'NODEID'
+NAME= 'NodeID'
+PLUG= 'RenderChannelNodeID'
 DESC= ""
-PID=  6
+PID=  10
 
 PARAMS= (
 	'name'
@@ -45,20 +45,20 @@ from vb25.utils import *
 
 
 def add_properties(parent_struct):
-	class RenderChannelRenderID(bpy.types.PropertyGroup):
+	class RenderChannelNodeID(bpy.types.PropertyGroup):
 		pass
-	bpy.utils.register_class(RenderChannelRenderID)
+	bpy.utils.register_class(RenderChannelNodeID)
 	
-	parent_struct.RenderChannelRenderID= PointerProperty(
+	parent_struct.RenderChannelNodeID= PointerProperty(
 		name= "RenderID",
-		type=  RenderChannelRenderID,
+		type=  RenderChannelNodeID,
 		description= "V-Ray render channel \"RenderID\" settings"
 	)
 
-	RenderChannelRenderID.name= StringProperty(
+	RenderChannelNodeID.name= StringProperty(
 		name= "Name",
 		description= "",
-		default= "RenderID"
+		default= "NodeID"
 	)
 
 
@@ -74,3 +74,11 @@ def write(ofile, render_channel, sce= None, name= None):
 	ofile.write("\n%s %s {" % (PLUG, clean_string(channel_name)))
 	ofile.write("\n\tname= \"%s\";" % clean_string(channel_name))
 	ofile.write("\n}\n")
+
+
+
+'''
+  GUI
+'''
+def draw(rna_pointer, layout, wide_ui):
+	layout.label(text="The object's \"Pass index\" contributes the pixel value.")
