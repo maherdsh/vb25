@@ -74,3 +74,7 @@ def write(ofile, render_channel, sce= None, name= None):
 	ofile.write("\n%s %s {" % (PLUG, clean_string(channel_name)))
 	ofile.write("\n\tname= \"%s\";" % clean_string(channel_name))
 	ofile.write("\n}\n")
+
+
+def draw(rna_pointer, layout, wide_ui):
+	pass
