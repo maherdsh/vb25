@@ -142,6 +142,10 @@ def write(bus):
 	if VRayExporter.auto_save_render:
 		ofile.write("\n\timg_file= \"%s\";" % bus['filenames']['output_filename'])
 		ofile.write("\n\timg_dir= \"%s/\";" % bus['filenames']['output'])
+
+	if SettingsOutput.img_format == 'EXR':
+		ofile.write("\n\timg_rawFile=1;") # TODO: Make an option
+
 	ofile.write("\n\timg_noAlpha= %d;" % SettingsOutput.img_noAlpha)
 	ofile.write("\n\timg_separateAlpha= %d;" % SettingsOutput.img_separateAlpha)
 	ofile.write("\n\timg_width= %s;" % wx)
