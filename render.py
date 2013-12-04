@@ -1848,7 +1848,7 @@ def run(bus):
 
 	engine = bus['engine']
 
-	params.append('-displaySRGB=%i' % VRayExporter.display_srgb)
+	params.append('-displaySRGB=%i' % (1 if VRayExporter.display_srgb else 2))
 
 	# If this is a background task, wait until render end
 	# and no VFB is required
