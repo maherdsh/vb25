@@ -27,7 +27,7 @@
 TYPE= 'RENDERCHANNEL'
 
 ID=   'OBJECTSELECT'
-NAME= 'Object select'
+NAME= 'Object Select'
 PLUG= 'RenderChannelObjectSelect'
 DESC= ""
 PID=  5
