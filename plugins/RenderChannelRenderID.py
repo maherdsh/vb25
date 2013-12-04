@@ -26,7 +26,7 @@
 
 TYPE= 'RENDERCHANNEL'
 ID=   'RENDERID'
-NAME= 'RenderID'
+NAME= 'Render ID'
 PLUG= 'RenderChannelRenderID'
 DESC= ""
 PID=  6
