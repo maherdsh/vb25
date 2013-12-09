@@ -64,6 +64,13 @@ PARAMS= (
 	'mtl_override',
 	'mtl_glossy',
 	'misc_lowThreadPriority',
+
+	'misc_abortOnMissingAsset',
+	'misc_transferAssets',
+	'misc_useCachedAssets',
+	'dr_assetsCacheLimitType',
+	'dr_assetsCacheLimitValue',
+	'dr_overwriteLocalCacheSettings',
 )
 
 
@@ -226,6 +233,48 @@ def add_properties(rna_pointer):
 		name= "Low thread priority",
 		description= "Low thread priority",
 		default= True
+	)
+
+	SettingsOptions.misc_abortOnMissingAsset = BoolProperty(
+		name        = "Abort On Missing Asset",
+		description = "Abort on missing asset",
+		default     = False
+	)
+
+	SettingsOptions.misc_transferAssets = BoolProperty(
+		name        = "Transfer Assets",
+		description = "Transfer missing assets on DR",
+		default     = False
+	)
+
+	SettingsOptions.misc_useCachedAssets = BoolProperty(
+		name        = "Use Cached Assets",
+		description = "Use cached assets on DR",
+		default     = True
+	)
+	SettingsOptions.dr_overwriteLocalCacheSettings = BoolProperty(
+		name        = "Overwrite Cache Settings",
+		description = "If is true the client's cache settings will overwrite server settings",
+		default     = False
+	)
+
+	SettingsOptions.dr_assetsCacheLimitValue = FloatProperty(
+		name        = "Cache Limit",
+		description = "Value of the assets cache limit",
+		min         = 0.0,
+		precision   = 1,
+		default     = 0
+	)
+
+	SettingsOptions.dr_assetsCacheLimitType = EnumProperty(
+		name        = "Cache Limit Type",
+		description = "Type of the assets cache limit",
+		items = (
+			('0', "None", "Assets are never deleted from the cache folder"),
+			('1', "Age (Hours)", "Assets that have been transferred before the specified period of time are deleted; the specified value is in hours"),
+			('2', "Size (GB)", "Assets are deleted from oldest to freshly received until the cache folder is below the specified size in gigabytes"),
+		),
+		default     = '0'
 	)
 
 

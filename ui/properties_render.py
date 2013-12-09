@@ -1029,42 +1029,49 @@ class VRAY_RP_dr(VRayRenderPanel, bpy.types.Panel):
 		return engine_poll(__class__, context) and module.on
 
 	def draw(self, context):
-		layout= self.layout
-		wide_ui= context.region.width > narrowui
+		layout = self.layout
 
-		vs= context.scene.vray
-		module= vs.VRayDR
+		VRayScene = context.scene.vray
+		VRayDR          = VRayScene.VRayDR
+		SettingsOptions = VRayScene.SettingsOptions
 
-		split= layout.split()
-		col= split.column()
-		col.prop(module, 'shared_dir')
-		if module.type == 'WW':
-			col.prop(module, 'share_name')
+		layout.prop(SettingsOptions, 'misc_transferAssets')
 
-		split= layout.split()
-		col= split.column()
-		col.prop(module, 'type', text="Network type")
+		if not SettingsOptions.misc_transferAssets:
+			layout.prop(VRayDR, 'type', text="Network type")
+
+			layout.prop(VRayDR, 'shared_dir')
+			if VRayDR.type == 'WW':
+				layout.prop(VRayDR, 'share_name')
+		else:
+			split= layout.split()
+			col= split.column()
+			col.prop(SettingsOptions, 'misc_abortOnMissingAsset')
+			col.prop(SettingsOptions, 'dr_overwriteLocalCacheSettings')
+			col= split.column()
+			col.prop(SettingsOptions, 'misc_useCachedAssets')
+			split= layout.split()
+			split.active = SettingsOptions.dr_overwriteLocalCacheSettings
+			col= split.column()
+			col.prop(SettingsOptions, 'dr_assetsCacheLimitType', text="Cache Limit")
+			sub = col.row()
+			sub.active = SettingsOptions.dr_assetsCacheLimitType != '0'
+			sub.prop(SettingsOptions, 'dr_assetsCacheLimitValue', text="Limit")
 
 		layout.separator()
-
-		split= layout.split()
-		col= split.column()
-		col.label(text="Port:")
-		if wide_ui:
-			col= split.column()
-		col.prop(module, 'port', text="")
+		layout.prop(VRayDR, 'port', text="Port")
 
 		layout.separator()
 
 		split= layout.split()
 		row= split.row()
-		row.template_list("VRayList", "", module, 'nodes', module, 'nodes_selected', rows= 3)
+		row.template_list("VRayList", "", VRayDR, 'nodes', VRayDR, 'nodes_selected', rows= 3)
 		col= row.column(align=True)
 		col.operator('vray.render_nodes_add',    text="", icon="ZOOMIN")
 		col.operator('vray.render_nodes_remove', text="", icon="ZOOMOUT")
 
-		if module.nodes_selected >= 0 and len(module.nodes) > 0:
-			render_node= module.nodes[module.nodes_selected]
+		if VRayDR.nodes_selected >= 0 and len(VRayDR.nodes) > 0:
+			render_node= VRayDR.nodes[VRayDR.nodes_selected]
 
 			layout.separator()
 
