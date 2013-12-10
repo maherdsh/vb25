@@ -1801,7 +1801,7 @@ def run(bus):
 			if len(VRayDR.nodes):
 				params.append('-distributed=1')
 				params.append('-portNumber=%i' % (VRayDR.port))
-				params.append('-renderhost=%s' % Quotes(';'.join([n.address for n in VRayDR.nodes])))
+				params.append('-renderhost=%s' % Quotes(';'.join([n.address for n in VRayDR.nodes if n.use])))
 				params.append('-include=%s' % Quotes(bus['filenames']['DR']['shared_dir'] + os.sep))
 
 		if VRayExporter.auto_save_render or VRayExporter.image_to_blender:

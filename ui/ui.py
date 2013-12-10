@@ -218,3 +218,8 @@ class VRayListUse(bpy.types.UIList):
 class VRayList(bpy.types.UIList):
 	def draw_item(self, context, layout, data, item, icon, active_data, active_propname, index):
 		layout.label(item.name)
+
+class VRayListDR(bpy.types.UIList):
+	def draw_item(self, context, layout, data, item, icon, active_data, active_propname, index):
+		layout.label("%s [%s]" % (item.name, item.address))
+		layout.prop(item, 'use', text="")

@@ -116,3 +116,8 @@ def add_properties(rna_pointer):
 		description= "Render node IP or hostname"
 	)
 
+	VRayRenderNode.use = BoolProperty(
+		name = "Use Node",
+		description = "Use render node",
+		default = True
+	)
