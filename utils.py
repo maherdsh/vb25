@@ -863,59 +863,59 @@ def get_full_filepath(bus, ob, filepath):
 	src_file = path_sep_to_unix(src_file)
 	src_file = os.path.normpath(src_file)
 
-	if not VRayDR.on:
-		return src_file
+	if VRayDR.on and SettingsOptions.misc_transferAssets:
+		# File name
+		src_filename= os.path.basename(src_file)
 
-	# File name
-	src_filename= os.path.basename(src_file)
+		# DR shared directory
+		dest_path= bus['filenames']['DR']['dest_dir']
 
-	# DR shared directory
-	dest_path= bus['filenames']['DR']['dest_dir']
+		# If shared directory is not set
+		# just return absolute file path
+		if not dest_path:
+			return src_file
 
-	# If shared directory is not set
-	# just return absolute file path
-	if not dest_path:
-		return src_file
+		file_type= os.path.splitext(src_file)[1]
 
-	file_type= os.path.splitext(src_file)[1]
-
-	component_subdir= ""
-	if file_type.lower() in ('ies','lens'):
-		component_subdir= "misc"
-	elif file_type.lower() == "vrmesh":
-		component_subdir= "proxy"
-	elif file_type.lower() == "vrmap":
-		component_subdir= "lightmaps"
-	else:
-		component_subdir= "textures"
-
-	if component_subdir:
-		dest_path= create_dir(os.path.join(dest_path, component_subdir))
-
-	# Copy file to the shared directory
-	dest_file= os.path.join(dest_path, src_filename)
-
-	if os.path.isfile(src_file):
-		if os.path.exists(dest_file):
-			# Copy only if the file was changed
-			if not filecmp.cmp(dest_file, src_file):
-				debug(scene, "Copying \"%s\" to \"%s\""% (color(src_filename, 'magenta'), dest_path))
-				shutil.copyfile(src_file, dest_file)
-			else:
-				debug(scene, "File \"%s\" exists and not modified."% (color(src_filename, 'magenta')))
+		component_subdir= ""
+		if file_type.lower() in ('ies','lens'):
+			component_subdir= "misc"
+		elif file_type.lower() == "vrmesh":
+			component_subdir= "proxy"
+		elif file_type.lower() == "vrmap":
+			component_subdir= "lightmaps"
 		else:
-			debug(scene, "Copying \"%s\" to \"%s\"" % (color(src_filename, 'magenta'), dest_path))
-			shutil.copyfile(src_file, dest_file)
+			component_subdir= "textures"
+
+		if component_subdir:
+			dest_path= create_dir(os.path.join(dest_path, component_subdir))
+
+		# Copy file to the shared directory
+		dest_file= os.path.join(dest_path, src_filename)
+
+		if os.path.isfile(src_file):
+			if os.path.exists(dest_file):
+				# Copy only if the file was changed
+				if not filecmp.cmp(dest_file, src_file):
+					debug(scene, "Copying \"%s\" to \"%s\""% (color(src_filename, 'magenta'), dest_path))
+					shutil.copyfile(src_file, dest_file)
+				else:
+					debug(scene, "File \"%s\" exists and not modified."% (color(src_filename, 'magenta')))
+			else:
+				debug(scene, "Copying \"%s\" to \"%s\"" % (color(src_filename, 'magenta'), dest_path))
+				shutil.copyfile(src_file, dest_file)
+		else:
+			debug(scene, "\"%s\" is not a file!" % (src_file), error= True)
+			return src_file
+
+		if VRayDR.type == 'WW':
+			return "//%s/%s/%s/%s/%s"%(HOSTNAME,
+									   VRayDR.share_name,
+									   bus['filenames']['DR']['sub_dir'], component_subdir, src_filename)
+
+		return bus['filenames']['DR']['prefix'] + os.sep + component_subdir + os.sep + src_filename
 	else:
-		debug(scene, "\"%s\" is not a file!" % (src_file), error= True)
 		return src_file
-
-	if VRayDR.type == 'WW':
-		return "//%s/%s/%s/%s/%s"%(HOSTNAME,
-								   VRayDR.share_name,
-								   bus['filenames']['DR']['sub_dir'], component_subdir, src_filename)
-
-	return bus['filenames']['DR']['prefix'] + os.sep + component_subdir + os.sep + src_filename
 
 
 # True if object on active layer
@@ -1116,7 +1116,7 @@ def init_files(bus):
 
 	# Distributed rendering
 	# filepath is relative = blend-file-name/filename
-	if VRayDR.on:
+	if VRayDR.on and not SettingsOptions.misc_transferAssets:
 		abs_shared_dir  = os.path.normpath(bpy.path.abspath(VRayDR.shared_dir))
 		export_filepath = os.path.normpath(os.path.join(abs_shared_dir, blendfile_name + os.sep))
 
@@ -1148,7 +1148,7 @@ def init_files(bus):
 		if key == 'geometry':
 			filepath = os.path.join(export_directory, "%s_geometry_00.vrscene" % (export_filename))
 		else:
-			if key == 'scene' and VRayDR.on:
+			if key == 'scene' and (VRayDR.on and not SettingsOptions.misc_transferAssets):
 				# Scene file MUST be on top of scene directory
 				filepath = os.path.normpath(os.path.join(export_directory, "..", "%s.vrscene" % (export_filename)))
 			else:

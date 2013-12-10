@@ -546,7 +546,7 @@ def write_settings(bus):
 			# Skip some files
 			continue
 
-		if VRayDR.on:
+		if VRayDR.on and not SettingsOptions.misc_transferAssets:
 			if key == 'geometry':
 				for t in range(threadCount):
 					if VRayDR.type == 'WW':
