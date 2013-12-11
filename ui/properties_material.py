@@ -84,7 +84,7 @@ class VRAY_MP_context_material(VRayMaterialPanel, bpy.types.Panel):
 		if ob:
 			row = layout.row()
 
-			row.template_list("MATERIAL_UL_matslots", "", ob, "material_slots", ob, "active_material_index", rows=2)
+			row.template_list("VRayListMaterialSlots", "", ob, "material_slots", ob, "active_material_index", rows=2)
 
 			col = row.column(align=True)
 			col.operator("object.material_slot_add", icon='ZOOMIN', text="")
@@ -99,20 +99,10 @@ class VRAY_MP_context_material(VRayMaterialPanel, bpy.types.Panel):
 				row.operator("object.material_slot_deselect", text="Deselect")
 
 		if wide_ui:
-			split = layout.split(percentage=0.65)
+			split = layout.split()
 
 			if ob:
 				split.template_ID(ob, "active_material", new="material.new")
-				row = split.row()
-				if mat:
-					VRayMaterial = mat.vray
-					if VRayMaterial.nodetree == "":
-						row.operator("vray.add_material_nodes", icon='NODETREE', text="")
-
-				if slot:
-					row.prop(slot, "link", text="")
-				else:
-					row.label()
 			elif mat:
 				split.template_ID(space, "pin_id")
 				split.separator()
@@ -125,20 +115,17 @@ class VRAY_MP_context_material(VRayMaterialPanel, bpy.types.Panel):
 		if mat:
 			VRayMaterial = mat.vray
 
-			if VRayMaterial.nodetree != "":
-				layout.prop_search(VRayMaterial, "nodetree", bpy.data, "node_groups")
-			else:
-				split= layout.split()
+			split= layout.split()
+			col= split.column()
+			col.label(text="Simple materials:")
+			if wide_ui:
 				col= split.column()
-				col.label(text="Simple materials:")
-				if wide_ui:
-					col= split.column()
-				col.menu('VRAY_MT_preset_material', text="Preset")
+			col.menu('VRAY_MT_preset_material', text="Preset")
 
-				if wide_ui:
-					layout.prop(VRayMaterial, 'type', expand=True)
-				else:
-					layout.prop(VRayMaterial, 'type')
+			if wide_ui:
+				layout.prop(VRayMaterial, 'type', expand=True)
+			else:
+				layout.prop(VRayMaterial, 'type')
 
 
 class VRAY_MP_basic(VRayMaterialPanel, bpy.types.Panel):

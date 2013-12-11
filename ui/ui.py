@@ -219,7 +219,23 @@ class VRayList(bpy.types.UIList):
 	def draw_item(self, context, layout, data, item, icon, active_data, active_propname, index):
 		layout.label(item.name)
 
+
 class VRayListDR(bpy.types.UIList):
 	def draw_item(self, context, layout, data, item, icon, active_data, active_propname, index):
 		layout.label("%s [%s]" % (item.name, item.address))
 		layout.prop(item, 'use', text="")
+
+
+class VRayListMaterialSlots(bpy.types.UIList):
+	def draw_item(self, context, layout, data, item, icon, active_data, active_propname, index):
+		ob   = data
+		slot = item
+		ma   = slot.material
+
+		split = layout.split(percentage=0.75)
+
+		if ma:
+			split.label(text=ma.name, translate=False, icon_value=icon)
+			split.prop(slot, 'link', text="", emboss=False, translate=False)
+		else:
+			split.label(text="")
