@@ -46,7 +46,12 @@ PARAMS= (
 
 def add_properties(rna_pointer):
 	class VRayExporter(bpy.types.PropertyGroup):
-		pass
+		random_material = BoolProperty(
+			name        = "Randomize Materials",
+			description = "Assing random material from emitter materials to the duplicated objects",
+			default     = False
+		)
+
 	bpy.utils.register_class(VRayExporter)
 
 	rna_pointer.exporter= PointerProperty(

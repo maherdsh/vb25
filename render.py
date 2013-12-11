@@ -33,6 +33,7 @@ import subprocess
 import sys
 import tempfile
 import time
+import random
 
 import threading
 from threading import Timer
@@ -1226,58 +1227,61 @@ def write_object(bus):
 	if VRayExporter.experimental and VRayObject.GeomVRayPattern.use:
 		PLUGINS['OBJECT']['GeomVRayPattern'].write(bus)
 
-	complex_material= []
-	complex_material.append(bus['node']['material'])
-	for component in (VRayObject.MtlWrapper.use,
-					  VRayObject.MtlOverride.use,
-					  VRayObject.MtlRenderStats.use):
-		if component:
-			complex_material.append("OC%.2d_%s" % (len(complex_material), bus['node']['material']))
-	complex_material.reverse()
+	if 'dupli' in bus['node'] and 'material' in bus['node']['dupli']:
+		bus['node']['material'] = get_name(bus['node']['dupli']['material'], prefix='MA')
+	else:
+		complex_material= []
+		complex_material.append(bus['node']['material'])
+		for component in (VRayObject.MtlWrapper.use,
+						  VRayObject.MtlOverride.use,
+						  VRayObject.MtlRenderStats.use):
+			if component:
+				complex_material.append("OC%.2d_%s" % (len(complex_material), bus['node']['material']))
+		complex_material.reverse()
 
-	if VRayObject.MtlWrapper.use:
-		base_material= complex_material.pop()
-		ma_name= complex_material[-1]
-		ofile.write("\nMtlWrapper %s {"%(ma_name))
-		ofile.write("\n\tbase_material= %s;"%(base_material))
-		for param in PLUGINS['MATERIAL']['MtlWrapper'].PARAMS:
-			ofile.write("\n\t%s= %s;"%(param, a(scene,getattr(VRayObject.MtlWrapper,param))))
-		ofile.write("\n}\n")
+		if VRayObject.MtlWrapper.use:
+			base_material= complex_material.pop()
+			ma_name= complex_material[-1]
+			ofile.write("\nMtlWrapper %s {"%(ma_name))
+			ofile.write("\n\tbase_material= %s;"%(base_material))
+			for param in PLUGINS['MATERIAL']['MtlWrapper'].PARAMS:
+				ofile.write("\n\t%s= %s;"%(param, a(scene,getattr(VRayObject.MtlWrapper,param))))
+			ofile.write("\n}\n")
 
-		bus['node']['material']= ma_name
+			bus['node']['material']= ma_name
 
-	if VRayObject.MtlOverride.use:
-		base_mtl= complex_material.pop()
-		ma_name= complex_material[-1]
-		ofile.write("\nMtlOverride %s {"%(ma_name))
-		ofile.write("\n\tbase_mtl= %s;"%(base_mtl))
+		if VRayObject.MtlOverride.use:
+			base_mtl= complex_material.pop()
+			ma_name= complex_material[-1]
+			ofile.write("\nMtlOverride %s {"%(ma_name))
+			ofile.write("\n\tbase_mtl= %s;"%(base_mtl))
 
-		for param in ('gi_mtl','reflect_mtl','refract_mtl','shadow_mtl'):
-			override_material= getattr(VRayObject.MtlOverride, param)
-			if override_material:
-				if override_material in bpy.data.materials:
-					ofile.write("\n\t%s= %s;"%(param, get_name(bpy.data.materials[override_material],"Material")))
+			for param in ('gi_mtl','reflect_mtl','refract_mtl','shadow_mtl'):
+				override_material= getattr(VRayObject.MtlOverride, param)
+				if override_material:
+					if override_material in bpy.data.materials:
+						ofile.write("\n\t%s= %s;"%(param, get_name(bpy.data.materials[override_material],"Material")))
 
-		environment_override= VRayObject.MtlOverride.environment_override
-		if environment_override:
-			if environment_override in bpy.data.materials:
-				ofile.write("\n\tenvironment_override= %s;" % get_name(bpy.data.textures[environment_override],"Texture"))
+			environment_override= VRayObject.MtlOverride.environment_override
+			if environment_override:
+				if environment_override in bpy.data.materials:
+					ofile.write("\n\tenvironment_override= %s;" % get_name(bpy.data.textures[environment_override],"Texture"))
 
-		ofile.write("\n\tenvironment_priority= %i;"%(VRayObject.MtlOverride.environment_priority))
-		ofile.write("\n}\n")
+			ofile.write("\n\tenvironment_priority= %i;"%(VRayObject.MtlOverride.environment_priority))
+			ofile.write("\n}\n")
 
-		bus['node']['material']= ma_name
+			bus['node']['material']= ma_name
 
-	if VRayObject.MtlRenderStats.use:
-		base_mtl= complex_material.pop()
-		ma_name= complex_material[-1]
-		ofile.write("\nMtlRenderStats %s {"%(ma_name))
-		ofile.write("\n\tbase_mtl= %s;"%(base_mtl))
-		for param in PLUGINS['MATERIAL']['MtlRenderStats'].PARAMS:
-			ofile.write("\n\t%s= %s;"%(param, a(scene,getattr(VRayObject.MtlRenderStats,param))))
-		ofile.write("\n}\n")
+		if VRayObject.MtlRenderStats.use:
+			base_mtl= complex_material.pop()
+			ma_name= complex_material[-1]
+			ofile.write("\nMtlRenderStats %s {"%(ma_name))
+			ofile.write("\n\tbase_mtl= %s;"%(base_mtl))
+			for param in PLUGINS['MATERIAL']['MtlRenderStats'].PARAMS:
+				ofile.write("\n\t%s= %s;"%(param, a(scene,getattr(VRayObject.MtlRenderStats,param))))
+			ofile.write("\n}\n")
 
-		bus['node']['material']= ma_name
+			bus['node']['material']= ma_name
 
 	write_node(bus)
 
@@ -1324,13 +1328,19 @@ def _write_object_particles(bus):
 
 
 def _write_object_dupli(bus):
-	ob = bus['node']['object']
+	scene = bus['scene']
+	ob    = bus['node']['object']
+
+	VRayScene = scene.vray
+	VRayExporter = VRayScene.exporter
 
 	dupli_from_particles = False
 	if len(ob.particle_systems):
 		for ps in ob.particle_systems:
 			if ps.settings.render_type in {'OBJECT', 'GROUP'}:
 				dupli_from_particles = True
+
+	nEmitterMaterials = len(ob.material_slots)
 
 	# This will fix "RuntimeError: Error: Object does not have duplis"
 	# when particle system is disabled for render
@@ -1360,6 +1370,11 @@ def _write_object_dupli(bus):
 				bus['node']['dupli']=  {}
 				bus['node']['dupli']['name']=   dup_node_name
 				bus['node']['dupli']['matrix']= dup_node_matrix
+
+				if dupli_from_particles:
+					if VRayExporter.random_material:
+						random.seed(dup_id)
+						bus['node']['dupli']['material'] = ob.material_slots[random.randint(0,nEmitterMaterials-1)].material
 
 				_write_object(bus)
 

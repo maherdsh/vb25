@@ -368,6 +368,7 @@ class VRAY_RP_exporter(VRayRenderPanel, bpy.types.Panel):
 		if wide_ui:
 			col= split.column()
 		col.prop(ve, 'use_hair')
+		col.prop(ve, 'random_material', text="Randomize Materials")
 
 		layout.separator()
 
@@ -423,20 +424,6 @@ class VRAY_RP_exporter(VRayRenderPanel, bpy.types.Panel):
 		else:
 			render_label = "Image"
 			render_icon  = 'RENDER_STILL'
-
-		box = layout.box()
-		box.label(text="Custom operators:")
-		split = box.split()
-		col = split.column()
-		col.operator('vray.render', text=render_label, icon=render_icon)
-		if not ve.auto_meshes:
-			if wide_ui:
-				col = split.column()
-			col.operator('vray.write_geometry', icon='OUTLINER_OB_MESH')
-
-		split = box.split()
-		col = split.column()
-		col.operator('vray.write_vrscene', icon='OBJECT_DATA', text="C++ Export Operator")
 
 
 class VRAY_RP_cm(VRayRenderPanel, bpy.types.Panel):
