@@ -850,7 +850,8 @@ def get_full_filepath(bus, ob, filepath):
 
 	scene= bus['scene']
 
-	VRayDR= scene.vray.VRayDR
+	VRayDR          = scene.vray.VRayDR
+	SettingsOptions = scene.vray.SettingsOptions
 
 	# If object is linked and path is relative
 	# we need to find correct absolute path
