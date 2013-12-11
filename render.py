@@ -1735,9 +1735,10 @@ def run(bus):
 
 	VRayScene = scene.vray
 
-	VRayExporter = VRayScene.exporter
-	VRayDR       = VRayScene.VRayDR
-	RTEngine     = VRayScene.RTEngine
+	VRayExporter    = VRayScene.exporter
+	VRayDR          = VRayScene.VRayDR
+	RTEngine        = VRayScene.RTEngine
+	SettingsOptions = VRayScene.SettingsOptions
 
 	vray_exporter=   get_vray_exporter_path()
 	vray_standalone= get_vray_standalone_path(scene)
@@ -1803,7 +1804,8 @@ def run(bus):
 				params.append('-distributed=1')
 				params.append('-portNumber=%i' % (VRayDR.port))
 				params.append('-renderhost=%s' % Quotes(';'.join([n.address for n in VRayDR.nodes if n.use])))
-				params.append('-include=%s' % Quotes(bus['filenames']['DR']['shared_dir'] + os.sep))
+				if not SettingsOptions.misc_transferAssets:
+					params.append('-include=%s' % Quotes(bus['filenames']['DR']['shared_dir'] + os.sep))
 
 		if VRayExporter.auto_save_render or VRayExporter.image_to_blender:
 			params.append('-imgFile=%s' % Quotes(image_file))
