@@ -137,8 +137,8 @@ def write(bus):
 		ofile.write("\n\theight=%s;" % a(scene, camera.data.ortho_scale))
 	# # We must use 8 if we want to change the fov from RenderView. If we use 0, we must change it from the physical camera
 	# # We must set the camera type to "pinhole" to make the physical camera match the other fov
-	# elif CameraPhysical.use:
-	# 	ofile.write("\n\ttype=8;")
+	elif CameraPhysical.use:
+		ofile.write("\n\ttype=8;")
 	else:
 		ofile.write("\n\ttype=%i;" % TYPE[SettingsCamera.type])
 	ofile.write("\n\tfov=-1;")
