@@ -112,7 +112,7 @@ class VRAY_PP_hair(VRayParticlePanel, bpy.types.Panel):
 
 		split= layout.split()
 		col= split.column()
-		col.prop(VRayFur, 'width')
+		col.prop(VRayFur, 'width', text="Fur Width")
 		# if wide_ui:
 		# 	col= split.column()
 		# col.prop(VRayFur, 'make_thinner')
