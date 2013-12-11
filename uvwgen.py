@@ -114,23 +114,26 @@ def write_UVWGenChannel(bus):
 		uvwgen = write_UVWGenPlanarWorld(bus)
 
 	ofile.write("\nUVWGenMayaPlace2dTexture %s {" % uvw_name)
-	if slot and hasattr(slot, 'uv_layer'):
-		if slot.uv_layer:
+	if slot:
+		if hasattr(slot, 'uv_layer') and slot.uv_layer:
 			if slot.uv_layer.isdigit():
 				ofile.write('\n\tuvw_channel=%s;' % slot.uv_layer)
 			else:
 				ofile.write('\n\tuv_set_name="%s";' % slot.uv_layer)
-	else:
-		ofile.write('\n\tuvw_channel=0;')
+		ofile.write("\n\ttranslate_frame_u=%.3f;" % slot.offset[0])
+		ofile.write("\n\ttranslate_frame_v=%.3f;" % slot.offset[1])
+		ofile.write("\n\tcoverage_u=%.3f;" % slot.scale[0])
+		ofile.write("\n\tcoverage_v=%.3f;" % slot.scale[1])
+
 	ofile.write("\n\tmirror_u=%d;" % VRayTexture.mirror_u)
 	ofile.write("\n\tmirror_v=%d;" % VRayTexture.mirror_v)
-	ofile.write("\n\trepeat_u=%d;" % VRayTexture.tile_u)
-	ofile.write("\n\trepeat_v=%d;" % VRayTexture.tile_v)
+	ofile.write("\n\trepeat_u=%.3f;" % VRayTexture.tile_u)
+	ofile.write("\n\trepeat_v=%.3f;" % VRayTexture.tile_v)
 	ofile.write("\n\trotate_frame=%.3f;" % VRaySlot.texture_rot)
 	# Optional UVWGen from which the initial uvw coordinates
 	# will be taken, instead of the surface point
 	if uvwgen:
-		ofile.write("\n\tuvwgen= %s;" % uvwgen)
+		ofile.write("\n\tuvwgen=%s;" % uvwgen)
 	ofile.write("\n}\n")
 
 	return uvw_name
