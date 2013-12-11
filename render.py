@@ -827,31 +827,29 @@ def write_materials(bus):
 
 	if len(ob.material_slots):
 		for slot in ob.material_slots:
-			ma= slot.material
-			if ma:
-				bus['material'] = {}
+			ma = slot.material
+			if not ma:
+				continue
 
-				if not ma.vray.dontOverride and SettingsOptions.mtl_override_on and SettingsOptions.mtl_override:
+			bus['material'] = {}
+			bus['material']['material'] = ma
+
+			if SettingsOptions.mtl_override_on and SettingsOptions.mtl_override:
+				if not ma.vray.dontOverride:
 					bus['material']['material'] = get_data_by_name(scene, 'materials', SettingsOptions.mtl_override)
-				else:
-					bus['material']['material'] = ma
 
-				# Normal mapping settings pointer
-				bus['material']['normal_slot'] = None
+			# Normal mapping settings pointer
+			bus['material']['normal_slot'] = None
 
-				# Bump mapping settings pointer
-				bus['material']['bump_slot']   = None
+			# Bump mapping settings pointer
+			bus['material']['bump_slot']   = None
 
-				# Set if any texture uses object mapping
-				bus['material']['orco_suffix'] = ""
+			# Set if any texture uses object mapping
+			bus['material']['orco_suffix'] = ""
 
-				if ma.use_nodes:
-					mtls_list.append(write_node_material(bus))
-
-				else:
-					mtls_list.append(write_material(bus))
-					ma_id+= 1
-					ids_list.append(str(ma_id))
+			mtls_list.append(write_material(bus))
+			ma_id+= 1
+			ids_list.append(str(ma_id))
 
 	# No materials assigned - use default material
 	if len(mtls_list) == 0:
@@ -1117,9 +1115,6 @@ def write_node(bus):
 		node_name+= 'HAIR'
 
 	material = base_mtl
-
-	if SettingsOptions.mtl_override_on and SettingsOptions.mtl_override:
-		material = get_name(bpy.data.materials[SettingsOptions.mtl_override], prefix='MA')
 
 	if not VRayScene.RTEngine.enabled and not VRayScene.RTEngine.use_opencl:
 		material = "RS%s" % node_name
