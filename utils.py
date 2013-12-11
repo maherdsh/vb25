@@ -864,7 +864,7 @@ def get_full_filepath(bus, ob, filepath):
 	src_file = path_sep_to_unix(src_file)
 	src_file = os.path.normpath(src_file)
 
-	if VRayDR.on and SettingsOptions.misc_transferAssets:
+	if VRayDR.on and not SettingsOptions.misc_transferAssets:
 		# File name
 		src_filename= os.path.basename(src_file)
 
