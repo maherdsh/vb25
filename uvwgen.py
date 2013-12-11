@@ -114,8 +114,12 @@ def write_UVWGenChannel(bus):
 		uvwgen = write_UVWGenPlanarWorld(bus)
 
 	ofile.write("\nUVWGenMayaPlace2dTexture %s {" % uvw_name)
-	if slot and hasattr(slot, 'uv_layer') and slot.uv_layer:
-		ofile.write('\n\tuv_set_name="%s";' % slot.uv_layer)
+	if slot and hasattr(slot, 'uv_layer'):
+		if slot.uv_layer:
+			if slot.uv_layer.isdigit():
+				ofile.write('\n\tuvw_channel=%s;' % slot.uv_layer)
+			else:
+				ofile.write('\n\tuv_set_name="%s";' % slot.uv_layer)
 	else:
 		ofile.write('\n\tuvw_channel=0;')
 	ofile.write("\n\tmirror_u=%d;" % VRayTexture.mirror_u)
