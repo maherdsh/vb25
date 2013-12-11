@@ -538,9 +538,6 @@ def write_settings(bus):
 		bus['files']['scene'].write("\n\tadaptive_threshold= 0.1;")
 		bus['files']['scene'].write("\n\tsubdivs_mult= 0.1;")
 		bus['files']['scene'].write("\n}\n")
-		bus['files']['scene'].write("\nSettingsImageSampler {")
-		bus['files']['scene'].write("\n\ttype= 1;")
-		bus['files']['scene'].write("\n}\n")
 
 	for key in bus['filenames']:
 		if key in ('output', 'output_filename', 'output_loadfile', 'lightmaps', 'scene', 'DR'):
