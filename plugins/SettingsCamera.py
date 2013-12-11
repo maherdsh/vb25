@@ -135,9 +135,6 @@ def write(bus):
 	if camera.data.type == 'ORTHO':
 		ofile.write("\n\ttype=7;")
 		ofile.write("\n\theight=%s;" % a(scene, camera.data.ortho_scale))
-	# We must set the camera type to "pinhole" to make the physical camera match the other fov
-	elif CameraPhysical.use:
-		ofile.write("\n\ttype=8;")
 	else:
 		ofile.write("\n\ttype=%i;" % TYPE[SettingsCamera.type])
 	ofile.write("\n\tfov=-1;")
