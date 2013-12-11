@@ -1788,8 +1788,8 @@ def run(bus):
 			elif VRayExporter.camera_loop:
 				if bus['cameras']:
 					params.append("-frames=1-%d,1" % len(bus['cameras']))
-			# else:
-			# 	params.append("%d" % scene.frame_current)
+			else:
+				params.append("-frames=%d" % scene.frame_current)
 
 		if VRayDR.on:
 			if len(VRayDR.nodes):
@@ -1978,14 +1978,11 @@ def run(bus):
 					break
 
 				if process.poll() is not None:
-					try:
-						if not VRayExporter.animation:
-							result= engine.begin_result(0, 0, resolution_x, resolution_y)
-							layer= result.layers[0]
-							layer.load_from_file(load_file)
-							engine.end_result(result)
-					except:
-						pass
+					if not VRayExporter.animation:
+						result= engine.begin_result(0, 0, resolution_x, resolution_y)
+						layer= result.layers[0]
+						layer.load_from_file(load_file)
+						engine.end_result(result)
 					break
 
 				time.sleep(0.1)
