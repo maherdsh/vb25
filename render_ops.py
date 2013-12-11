@@ -681,7 +681,7 @@ class VRAY_OT_proxy_load_preview(bpy.types.Operator):
 		originalMesh = context.object.data
 		GeomMeshFile = originalMesh.vray.GeomMeshFile
 
-		proxyFilepath = bpy.path.abspath(GeomMeshFile.file)
+		proxyFilepath = os.path.normpath(path_sep_to_unix(bpy.path.abspath(GeomMeshFile.file)))
 		proxyFilename = os.path.basename(proxyFilepath)
 
 		meshFile = VRayProxy.MeshFile(proxyFilepath)
