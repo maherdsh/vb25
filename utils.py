@@ -1073,10 +1073,12 @@ def get_vray_standalone_path(sce):
 def init_files(bus):
 	scene = bus['scene']
 
-	VRayScene      = scene.vray
-	VRayExporter   = VRayScene.exporter
-	VRayDR         = VRayScene.VRayDR
-	SettingsOutput = VRayScene.SettingsOutput
+	VRayScene = scene.vray
+	
+	VRayExporter    = VRayScene.exporter
+	VRayDR          = VRayScene.VRayDR
+	SettingsOutput  = VRayScene.SettingsOutput
+	SettingsOptions = VRayScene.SettingsOptions
 
 	(blendfile_path, blendfile_name) = os.path.split(bpy.data.filepath)
 
