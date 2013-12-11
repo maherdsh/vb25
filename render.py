@@ -469,11 +469,12 @@ def write_settings(bus):
 	ofile = bus['files']['scene']
 	scene = bus['scene']
 
-	VRayScene      = scene.vray
-	VRayExporter   = VRayScene.exporter
-	VRayDR         = VRayScene.VRayDR
-	SettingsOutput = VRayScene.SettingsOutput
-	Includer       = VRayScene.Includer
+	VRayScene = scene.vray
+	VRayExporter    = VRayScene.exporter
+	VRayDR          = VRayScene.VRayDR
+	SettingsOutput  = VRayScene.SettingsOutput
+	SettingsOptions = VRayScene.SettingsOptions
+	Includer        = VRayScene.Includer
 
 	threadCount = scene.render.threads
 	if VRayExporter.meshExportThreads:
