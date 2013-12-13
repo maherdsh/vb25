@@ -45,7 +45,25 @@ PARAMS= (
 
 
 def add_properties(rna_pointer):
-	pass
+	class RenderView(bpy.types.PropertyGroup):
+		clip_near = BoolProperty(
+			name = "Clip Near",
+			description = "Clip near",
+			default = False
+		)
+
+		clip_far = BoolProperty(
+			name = "Clip Far",
+			description = "Clip far",
+			default = False
+		)
+	bpy.utils.register_class(RenderView)
+
+	rna_pointer.RenderView= PointerProperty(
+		name= "RenderView",
+		type=  RenderView,
+		description= "V-Ray RenderView settings"
+	)
 
 
 def write(bus):
@@ -58,6 +76,7 @@ def write(bus):
 	RTEngine  = VRayScene.RTEngine
 
 	VRayCamera     = camera.data.vray
+	RenderView     = VRayScene.RenderView
 	SettingsCamera = VRayCamera.SettingsCamera
 
 	if not VRayBake.use:
@@ -73,9 +92,11 @@ def write(bus):
 		ofile.write("\n\ttransform=%s;" % a(scene, transform(camera.matrix_world)))
 		ofile.write("\n\tfov=%s;" % a(scene, fov))
 		if SettingsCamera.type not in ('SPHERIFICAL','BOX'):
-			ofile.write("\n\tclipping=1;")
-			ofile.write("\n\tclipping_near=%s;" % a(scene, camera.data.clip_start))
-			ofile.write("\n\tclipping_far=%s;" % a(scene, camera.data.clip_end))
+			ofile.write("\n\tclipping=%i;" % (RenderView.clip_far or RenderView.clip_far))
+			if RenderView.clip_near:
+				ofile.write("\n\tclipping_near=%s;" % a(scene, camera.data.clip_start))
+			if RenderView.clip_far:
+				ofile.write("\n\tclipping_far=%s;" % a(scene, camera.data.clip_end))
 		if camera.data.type == 'ORTHO':
 			ofile.write("\n\torthographic=1;")
 			ofile.write("\n\torthographicWidth=%s;" % a(scene, camera.data.ortho_scale))

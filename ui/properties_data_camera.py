@@ -55,7 +55,10 @@ class VRAY_DP_camera(VRayDataPanel, bpy.types.Panel):
 
 		ca= context.camera
 
-		VRayCamera= ca.vray
+		VRayScene = context.scene.vray
+
+		RenderView = VRayScene.RenderView
+		VRayCamera = ca.vray
 
 		SettingsCamera=     VRayCamera.SettingsCamera
 		SettingsCameraDof=  VRayCamera.SettingsCameraDof
@@ -113,30 +116,20 @@ class VRAY_DP_camera(VRayDataPanel, bpy.types.Panel):
 		# split= layout.split()
 		# col= split.column()
 		# col= split.column()
-
-		if not CameraPhysical.use:
-			layout.label(text="Clipping:")
-
-		split= layout.split()
-		col= split.column()
-		if CameraPhysical.use:
-			sub= col.column(align=True)
-			sub.label(text="Clipping:")
-		else:
-			if wide_ui:
-				sub= col.row(align=True)
-			else:
-				sub= col.column(align=True)
-		sub.prop(ca, 'clip_start', text="Start")
-		sub.prop(ca, 'clip_end', text="End")
-
-		if CameraPhysical.use:
-			if wide_ui:
-				col= split.column()
-			sub= col.column(align=True)
-			sub.label(text="Offset:")
-			sub.prop(ca, 'shift_x', text="X")
-			sub.prop(ca, 'shift_y', text="Y")
+		
+		layout.label(text="Clipping:")
+		split = layout.split()
+		col = split.column()
+		col.prop(RenderView, 'clip_near')
+		sub = col.column()
+		sub.active = RenderView.clip_near
+		sub.prop(ca, 'clip_start', text="Near")
+		if wide_ui:
+			col = split.column()
+		col.prop(RenderView, 'clip_far')
+		sub = col.column()
+		sub.active = RenderView.clip_far
+		sub.prop(ca, 'clip_end', text="Far")
 
 		split= layout.split()
 		split.label(text="Depth of Field:")
@@ -252,6 +245,12 @@ class VRAY_DP_physical_camera(VRayDataPanel, bpy.types.Panel):
 			col= split.column()
 
 		col.prop(CameraPhysical, 'vignetting', slider= True)
+
+		layout.label(text="Offset:")
+		split= layout.split()
+		sub = split.row(align=True)
+		sub.prop(ca, 'shift_x', text="X")
+		sub.prop(ca, 'shift_y', text="Y")
 
 		split= layout.split()
 		colL= split.column()
