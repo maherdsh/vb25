@@ -361,14 +361,10 @@ def add_properties(rna_pointer):
 	)
 
 	# uv_noise_animate
-	rna_pointer.uv_noise_animate= IntProperty(
+	rna_pointer.uv_noise_animate= BoolProperty(
 		name= "Animate",
 		description= "If true the noise is animated",
-		min= 0,
-		max= 100,
-		soft_min= 0,
-		soft_max= 10,
-		default= 0
+		default= False
 	)
 
 	# uv_noise_amount
