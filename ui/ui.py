@@ -239,3 +239,4 @@ class VRayListMaterialSlots(bpy.types.UIList):
 			split.prop(slot, 'link', text="", emboss=False, translate=False)
 		else:
 			split.label(text="")
+			split.prop(slot, 'link', text="", emboss=False, translate=False)
