@@ -46,6 +46,11 @@ PARAMS= (
 	'minLeafSize',
 	'faceLevelCoef',
 	'dynMemLimit',
+	'embreeUse',
+	'embreeUseMB',
+	'embreeHighPrec',
+	'embreeLowMemory',
+	'embreeRayPackets',
 )
 
 
@@ -94,6 +99,32 @@ def add_properties(rna_pointer):
 		min= 0,
 		max= 100000,
 		default= 0
+	)
+
+	SettingsRaycaster.embreeUse= BoolProperty(
+		name="embreeUse",
+		description="Enable/Disable using the embree ray caster",
+		default=False
+	)
+	SettingsRaycaster.embreeUseMB= BoolProperty(
+		name="embreeUseMB",
+		description="Enable/disable using the embree ray caster for motion blur",
+		default=False
+	)
+	SettingsRaycaster.embreeHighPrec= BoolProperty(
+		name="embreeHighPrec",
+		description="Enable/disable high precision intersection",
+		default=False
+	)
+	SettingsRaycaster.embreeLowMemory= BoolProperty(
+		name="embreeLowMemory",
+		description="Try to conserve memory, using potentially slower algorithms",
+		default=False
+	)
+	SettingsRaycaster.embreeRayPackets= BoolProperty(
+		name="embreeRayPackets",
+		description="Turn on the packet ray casting",
+		default=False
 	)
 
 
