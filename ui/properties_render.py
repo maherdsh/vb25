@@ -530,7 +530,7 @@ class VRAY_RP_aa(VRayRenderPanel, bpy.types.Panel):
 			if wide_ui:
 				col= split.column()
 			col.prop(module, "filter_type", text="")
-			if not module.filter_type == 'NONE':
+			if module.filter_type not in {'NONE', 'CATMULL'}:
 				col.prop(module, "filter_size")
 
 
