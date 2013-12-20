@@ -269,13 +269,13 @@ def add_properties(rna_pointer):
 
 def write(bus):
 	FILTER_TYPE= {
-		'AREA'     : "\nFilterArea {",
-		'BOX'      : "\nFilterBox {",
-		'TRIANGLE' : "\nFilterTriangle {",
-		'LANC'     : "\nFilterLanczos {",
-		'SINC'     : "\nFilterSinc {",
-		'GAUSS'    : "\nFilterGaussian {",
-		'CATMULL'  : "\nFilterCatmullRom {"
+		'AREA'     : "\nFilterArea aaFilter {",
+		'BOX'      : "\nFilterBox aaFilter {",
+		'TRIANGLE' : "\nFilterTriangle aaFilter {",
+		'LANC'     : "\nFilterLanczos aaFilter {",
+		'SINC'     : "\nFilterSincv aaFilter {",
+		'GAUSS'    : "\nFilterGaussian aaFilter {",
+		'CATMULL'  : "\nFilterCatmullRom aaFilter {"
 	}
 
 	TYPE= {
@@ -311,5 +311,6 @@ def write(bus):
 
 	if SettingsImageSamplerFilter.filter_type != 'NONE':
 		ofile.write(FILTER_TYPE[SettingsImageSamplerFilter.filter_type])
-		ofile.write("\n\tsize= %.3f;" % SettingsImageSamplerFilter.filter_size)
+		if SettingsImageSamplerFilter.filter_type not in {'CATMULL'}:
+			ofile.write("\n\tsize= %.3f;" % SettingsImageSamplerFilter.filter_size)
 		ofile.write("\n}\n")
