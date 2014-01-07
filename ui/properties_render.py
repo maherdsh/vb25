@@ -187,11 +187,18 @@ class VRAY_RP_output(VRayRenderPanel, bpy.types.Panel):
 		col= split.column()
 		col.prop(SettingsOutput, 'img_noAlpha')
 		col.prop(SettingsOutput, 'img_separateAlpha')
-		col.prop(SettingsOutput, 'relements_separateFolders')
 		if wide_ui:
 			col = split.column()
+		if img_format == 'EXR':
+			col.prop(SettingsOutput, 'relements_separateFiles')
+		col.prop(SettingsOutput, 'relements_separateFolders')
+
+		split= layout.split()
+		col= split.column()
 		col.prop(SettingsOutput, 'img_file_needFrameNumber')
-		col.prop(VRayExporter,   'image_to_blender')
+		if wide_ui:
+			col = split.column()
+		col.prop(VRayExporter, 'image_to_blender')
 
 		# sub= col.column()
 		# sub.active= False

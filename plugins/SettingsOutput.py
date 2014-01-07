@@ -108,6 +108,12 @@ def add_properties(rna_pointer):
 			description= "Save render channels in separate folders",
 			default= False
 		)
+
+		relements_separateFiles = BoolProperty(
+			name = "Separate Files",
+			description = "Save render channels in separate files",
+			default = True
+		)
 	bpy.utils.register_class(SettingsOutput)
 
 	rna_pointer.SettingsOutput= PointerProperty(
@@ -144,7 +150,8 @@ def write(bus):
 		ofile.write("\n\timg_dir= \"%s/\";" % bus['filenames']['output'])
 
 	if SettingsOutput.img_format == 'EXR':
-		ofile.write("\n\timg_rawFile=1;") # TODO: Make an option
+		if not SettingsOutput.relements_separateFiles:
+			ofile.write("\n\timg_rawFile=1;")
 
 	ofile.write("\n\timg_noAlpha= %d;" % SettingsOutput.img_noAlpha)
 	ofile.write("\n\timg_separateAlpha= %d;" % SettingsOutput.img_separateAlpha)
