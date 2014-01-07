@@ -87,9 +87,11 @@ def write(bus):
 		if aspect < 1.0:
 			fov = fov * aspect
 
+		tm = camera.matrix_world.normalized()
+
 		ofile.write("\n// Camera: %s" % (camera.name))
 		ofile.write("\nRenderView CameraView {")
-		ofile.write("\n\ttransform=%s;" % a(scene, transform(camera.matrix_world)))
+		ofile.write("\n\ttransform=%s;" % a(scene, transform(tm)))
 		ofile.write("\n\tfov=%s;" % a(scene, fov))
 		if SettingsCamera.type not in ('SPHERIFICAL','BOX'):
 			ofile.write("\n\tclipping=%i;" % (RenderView.clip_near or RenderView.clip_far))
