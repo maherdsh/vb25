@@ -499,9 +499,9 @@ def write_settings(bus):
 				plugin= PLUGINS['RENDERCHANNEL'].get(render_channel.type)
 				if plugin:
 					try:
-						plugin.write(bus, getattr(render_channel,plugin.PLUG), render_channel.name)
+						plugin.write(bus, getattr(render_channel,plugin.PLUG), name=render_channel.name)
 					except:
-						plugin.write(ofile, getattr(render_channel,plugin.PLUG), scene, render_channel.name)
+						plugin.write(ofile, getattr(render_channel,plugin.PLUG), scene, name=render_channel.name)
 
 	# Preview settings are in different parts of the file,
 	# because smth must be set before and smth after.
