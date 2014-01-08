@@ -1012,6 +1012,13 @@ def proxy_creator(hq_filepath, vrmesh_filepath, append= False):
 			debug(None, "Proxy Creator not found!", error= True)
 
 
+def GetUserConfigDir():
+	userConfigDirpath = bpy.utils.user_resource('CONFIG')
+	if not os.path.exists(userConfigDirpath):
+		os.makedirs(userConfigDirpath)
+	return userConfigDirpath
+
+
 # Returns path to vb25 folder
 def get_vray_exporter_path():
 	for vb_path in bpy.utils.script_paths(os.path.join('startup','vb25')):
