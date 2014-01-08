@@ -360,7 +360,7 @@ class VRAY_RP_exporter(VRayRenderPanel, bpy.types.Panel):
 			col= split.column()
 		col.label(text="Mesh export:")
 		col.prop(ve, 'mesh_active_layers', text= "Active layers")
-		# col.prop(ve, 'check_animated')
+		col.prop(ve, 'check_animated')
 		col.prop(ve, 'use_instances')
 		# col.prop(SettingsOptions, 'geom_displacement')
 		col.prop(ve, 'mesh_debug')
