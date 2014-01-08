@@ -1064,6 +1064,10 @@ class VRAY_RP_dr(VRayRenderPanel, bpy.types.Panel):
 		col.operator('vray.render_nodes_add',    text="", icon="ZOOMIN")
 		col.operator('vray.render_nodes_remove', text="", icon="ZOOMOUT")
 
+		col = col.row().column(align=True)
+		col.operator('vray.dr_nodes_load',       text="", icon="FILE_FOLDER")
+		col.operator('vray.dr_nodes_save',       text="", icon="SAVE_PREFS")
+
 		if VRayDR.nodes_selected >= 0 and len(VRayDR.nodes) > 0:
 			render_node= VRayDR.nodes[VRayDR.nodes_selected]
 
