@@ -32,6 +32,7 @@ if "bpy" in locals():
 	imp.reload(ui)
 	imp.reload(preset)
 	imp.reload(render_ops)
+	imp.reload(events)
 else:
 	import bpy
 	from vb25 import lib
@@ -39,12 +40,15 @@ else:
 	from vb25 import ui
 	from vb25 import preset
 	from vb25 import render_ops
+	from vb25 import events
 
 
 def register():
 	bpy.utils.register_module(__name__)
 
 	plugins.add_properties()
+
+	events.register()
 
 	wm = bpy.context.window_manager
 	kc = wm.keyconfigs.addon
@@ -57,6 +61,8 @@ def unregister():
 	bpy.utils.unregister_module(__name__)
 
 	plugins.remove_properties()
+
+	events.unregister()
 
 	wm = bpy.context.window_manager
 	kc = wm.keyconfigs.addon
