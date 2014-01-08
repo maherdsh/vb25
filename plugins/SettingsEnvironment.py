@@ -819,6 +819,39 @@ def write_VolumeVRayToon_from_material(bus):
 
 	return toon_name
 
+
+def write_SphereFadeGizmo(bus, ob):
+	scene= bus['scene']
+	ofile= bus['files']['environment']
+
+	vray = ob.vray
+	name= "MG%s" % get_name(ob, prefix='EMPTY')
+	ofile.write("\nSphereFadeGizmo %s {" % name)
+	ofile.write("\n\ttransform= %s;" % a(scene, transform(ob.matrix_world)))
+	if ob.type == 'EMPTY':
+		ofile.write("\n\tradius=%s;" % ob.empty_draw_size)
+	elif vray.MtlRenderStats.use:
+		ofile.write("\n\tradius=%s;" % vray.fade_radius)
+	ofile.write("\n\tinvert=0;")
+	ofile.write("\n}\n")
+	return name
+
+
+def write_SphereFade(bus, effect, gizmos):
+	scene= bus['scene']
+	ofile= bus['files']['environment']
+
+	name= "ESF%s" % clean_string(effect.name)
+
+	ofile.write("\nSphereFade %s {" % name)
+	ofile.write("\n\tgizmos= List(%s);" % ','.join(gizmos))
+	for param in PARAMS['SphereFade']:
+		value= getattr(effect.SphereFade, param)
+		ofile.write("\n\t%s= %s;"%(param, a(scene,value)))
+
+	ofile.write("\n}\n")
+
+
 def write(bus):
 	ofile= bus['files']['environment']
 	scene= bus['scene']
@@ -837,32 +870,6 @@ def write(bus):
 		ofile.write("\n}\n")
 
 		return name
-
-	def write_SphereFadeGizmo(bus, ob):
-		vray = ob.vray
-		name= "MG%s" % get_name(ob, prefix='EMPTY')
-		ofile.write("\nSphereFadeGizmo %s {" % name)
-		ofile.write("\n\ttransform= %s;" % a(scene, transform(ob.matrix_world)))
-		if ob.type == 'EMPTY':
-			ofile.write("\n\tradius=%s;" % ob.empty_draw_size)
-		elif vray.MtlRenderStats.use:
-			ofile.write("\n\tradius=%s;" % vray.fade_radius)
-		ofile.write("\n\tinvert=0;")
-		ofile.write("\n}\n")
-		return name
-
-	def write_SphereFade(bus, effect, gizmos):
-		scene= bus['scene']
-		name= "ESF%s" % clean_string(effect.name)
-
-		ofile.write("\nSphereFade %s {" % name)
-		print(gizmos)
-		ofile.write("\n\tgizmos= List(%s);" % ','.join(gizmos))
-		for param in PARAMS['SphereFade']:
-			value= getattr(effect.SphereFade, param)
-			ofile.write("\n\t%s= %s;"%(param, a(scene,value)))
-
-		ofile.write("\n}\n")
 
 	def write_EnvironmentFog_from_material(ofile,volume,material):
 		LIGHT_MODE= {
@@ -1114,6 +1121,27 @@ def write(bus):
 		ofile.write("\n}\n")
 
 
+def WriteSphereFade(bus):
+	scene = bus['scene']
+
+	VRayScene = scene.vray
+	VRayEffects = VRayScene.VRayEffects
+
+	if not VRayEffects.use:
+		return
+
+	for effect in VRayEffects.effects:
+		if not effect.use:
+			continue
+
+		if not effect.type == 'SFADE':
+			continue
+
+		SphereFade = effect.SphereFade
+
+		for ob in generate_object_list(SphereFade.gizmos_objects, SphereFade.gizmos_groups):
+			if object_visible(bus,ob):
+				write_SphereFadeGizmo(bus, ob)
 
 '''
   GUI

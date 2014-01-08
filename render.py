@@ -1696,6 +1696,9 @@ def write_scene(bus):
 		PLUGINS['SETTINGS']['RenderView'].write(bus)
 		PLUGINS['CAMERA']['CameraStereoscopic'].write(bus)
 
+		# Sphere fade could be animated
+		PLUGINS['SETTINGS']['SettingsEnvironment'].WriteSphereFade(bus)
+
 		debug(scene, "Writing frame {0}... done {1:<64}".format(scene.frame_current, "[%.2f]"%(time.clock() - timer)))
 
 	timer= time.clock()
