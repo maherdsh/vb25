@@ -518,7 +518,12 @@ class VRAY_OT_dr_nodes_load(bpy.types.Operator):
 
 		nodesFilepath = os.path.join(GetUserConfigDir(), "vray_render_nodes.txt")
 
+		if not os.path.exists(nodesFilepath):
+			return {'CANCELLED'}
+
 		with open(nodesFilepath, 'r') as nodesFile:
+			VRayDR.nodes.clear()
+
 			for line in nodesFile.readlines():
 				l = line.strip()
 				if not l:
