@@ -572,15 +572,14 @@ def a(scene, t):
 	if VRayExporter.camera_loop:
 		frame = VRayExporter.customFrame
 	
-	if VRayScene.RTEngine.enabled and VRayScene.RTEngine.use_opencl:
+	if VRayScene.RTEngine.enabled:
 		return p(t)
 
-	if not VRayExporter.animation or \
-	   not VRayExporter.camera_loop or \
-	   not VRayExporter.use_still_motion_blur:
-	   return p(t)
+	if VRayExporter.animation or VRayExporter.camera_loop or VRayExporter.use_still_motion_blur:
+		return "interpolate((%i,%s))" % (frame, p(t))
 
-	return "interpolate((%i,%s))" % (frame, p(t))
+	return p(t)
+
 
 
 # Hex value format
