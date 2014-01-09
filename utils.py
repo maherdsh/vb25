@@ -584,15 +584,32 @@ def a(scene, t):
 
 
 # Checks if object is animated
+#
+# TODO: cache results
+#
 def is_animated(ob):
-	# print("ob.name", ob.name)
-	# print("ob.animation_data",ob.animation_data)
+	print("ob.name", ob.name)
+	print("ob.animation_data",ob.animation_data)
 
 	if ob.animation_data:
 		return True
 
 	if ob.type in GEOM_TYPES:
-		pass
+		# Check if material is animated
+		if len(ob.material_slots):
+			for slot in ob.material_slots:
+				ma = slot.material
+				if not ma:
+					continue
+				if ma.animation_data:
+					return True
+				# Check if texture is animated
+				if len(ma.texture_slots):
+					for tSlot in ma.texture_slots:
+						if not tSlot.texture:
+							continue
+						if tSlot.texture.animation_data:
+							return True
 	elif ob.type in {'LAMP'}:
 		pass
 
@@ -603,6 +620,10 @@ def is_animated(ob):
 def is_data_animated(ob):
 	if not ob.data:
 		return False
+
+	print("ob.data.name", ob.name)
+	print("ob.data.animation_data", ob.data.animation_data)
+
 	if ob.data.animation_data:
 		return True
 	if ob.active_shape_key:
