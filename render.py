@@ -1436,7 +1436,7 @@ def _write_object(bus):
 #	VRayScene = bus['scene'].vray
 #	Includer = VRayScene.Includer
 
-	if ob.type in ('CAMERA','ARMATURE','LATTICE'):
+	if ob.type in {'CAMERA','ARMATURE','LATTICE','SPEAKER'}:
 		return
 
 	# Export LAMP
