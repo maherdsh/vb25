@@ -455,8 +455,8 @@ COLOR_TABLE= {
 }
 
 ARCH= platform.architecture()[0]
-TEX_TYPES=  ('IMAGE', 'VRAY')
-GEOM_TYPES= ('MESH', 'CURVE', 'SURFACE', 'META', 'FONT')
+TEX_TYPES=  {'IMAGE', 'VRAY'}
+GEOM_TYPES= {'MESH', 'CURVE', 'SURFACE', 'META', 'FONT'}
 
 none_matrix= mathutils.Matrix(((0.0,0.0,0.0,0.0),(0.0,0.0,0.0,0.0),(0.0,0.0,0.0,0.0),(0.0,0.0,0.0,0.0)))
 
