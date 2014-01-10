@@ -33,6 +33,7 @@ from bpy.props import *
 from vb25.utils import *
 from vb25.ui.ui import *
 from vb25.plugins import *
+from vb25 import version
 
 
 class VRAY_MT_preset_IM(bpy.types.Menu):
@@ -1288,6 +1289,8 @@ class VRAY_RP_about(VRayRenderPanel, bpy.types.Panel):
 		split= layout.split()
 		col= split.column()
 		col.label(text="V-Ray/Blender")
+		col.separator()
+		col.label("Version: %s [%s]" % (version.HASH, version.COUNT))
 		col.separator()
 		col.label(text="Developer: Andrey Izrantsev")
 		col.label(text="URL: http://vray.cgdo.ru")

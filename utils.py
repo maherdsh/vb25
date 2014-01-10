@@ -606,6 +606,8 @@ def is_animated(ob):
 				# Check if texture is animated
 				if len(ma.texture_slots):
 					for tSlot in ma.texture_slots:
+						if not tSlot:
+							continue
 						if not tSlot.texture:
 							continue
 						if tSlot.texture.animation_data:
