@@ -2113,6 +2113,8 @@ def render(engine, scene, preview= None):
 
 				f = scene.frame_start
 				while(f <= scene.frame_end):
+					if engine and engine.test_break():
+						return
 					scene.frame_set(f)
 					export_and_run(init_bus(engine, scene))
 					f += scene.frame_step
