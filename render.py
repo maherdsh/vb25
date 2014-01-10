@@ -1716,6 +1716,8 @@ def write_scene(bus):
 		selected_frame= scene.frame_current
 		f= scene.frame_start
 		while(f <= scene.frame_end):
+			if bus['engine'] and bus['engine'].test_break():
+				return
 			scene.frame_set(f)
 			write_frame(bus)
 			f+= scene.frame_step
