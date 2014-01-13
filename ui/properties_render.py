@@ -1288,9 +1288,7 @@ class VRAY_RP_about(VRayRenderPanel, bpy.types.Panel):
 
 		split= layout.split()
 		col= split.column()
-		col.label(text="V-Ray/Blender")
-		col.separator()
-		col.label("Version: %s [%s]" % (version.HASH, version.COUNT))
+		col.label(text="V-Ray/Blender %s" % version.VERSION)
 		col.separator()
 		col.label(text="Developer: Andrey Izrantsev")
 		col.label(text="URL: http://vray.cgdo.ru")
