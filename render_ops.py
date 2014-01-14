@@ -739,23 +739,19 @@ class VRAY_OT_proxy_load_preview(bpy.types.Operator):
 		proxyFilename = os.path.basename(proxyFilepath)
 
 		meshFile = VRayProxy.MeshFile(proxyFilepath)
-		result = meshFile.readFile()
 
+		result = meshFile.readFile()
 		if result is not None:
 			self.report({'ERROR'}, "Error parsing VRayProxy file!")
 			return {'FINISHED'}
 
-		previewVoxel = meshFile.getVoxelByType(VRayProxy.MVF_PREVIEW_VOXEL)
-
-		if not previewVoxel:
+		meshData = meshFile.getPreviewMesh(GeomMeshFile.anim_type, context.scene.frame_current-1)
+		if meshData is None:
 			self.report({'ERROR'}, "Can't find preview voxel!")
 			return {'FINISHED'}
 
-		vertices = previewVoxel.getVertices()
-		faces    = previewVoxel.getFaces()
-
 		mesh = bpy.data.meshes.new("VRayProxyPreview")
-		mesh.from_pydata(vertices, [], faces)
+		mesh.from_pydata(meshData['vertices'], [], meshData['faces'])
 		mesh.update()
 
 		# Replace object mesh
