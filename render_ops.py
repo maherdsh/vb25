@@ -745,7 +745,13 @@ class VRAY_OT_proxy_load_preview(bpy.types.Operator):
 			self.report({'ERROR'}, "Error parsing VRayProxy file!")
 			return {'FINISHED'}
 
-		meshData = meshFile.getPreviewMesh(GeomMeshFile.anim_type, context.scene.frame_current-1)
+		meshData = meshFile.getPreviewMesh(
+			GeomMeshFile.anim_type,
+			GeomMeshFile.anim_offset,
+			GeomMeshFile.anim_speed,
+			context.scene.frame_current-1
+		)
+
 		if meshData is None:
 			self.report({'ERROR'}, "Can't find preview voxel!")
 			return {'FINISHED'}
