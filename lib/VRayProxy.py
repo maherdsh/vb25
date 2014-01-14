@@ -143,7 +143,7 @@ class VoxelChannel(MeshFileReader):
     def printInfo(self):
         self.report("Channel")
         self.report("  elementSize  = %i" % (self.elementSize))
-        self.report("  numElements  = %i" % (self.numElements))        
+        self.report("  numElements  = %i" % (self.numElements))
         self.report("  channelID    = %s" % (ChannelID[self.channelID] if self.channelID in ChannelID else str(self.channelID)))
         self.report("  depChannelID = %i" % (self.depChannelID))
 
@@ -264,7 +264,7 @@ class MeshVoxel(MeshFileReader):
         return tuple(zip(*([iter(input)]*size)))
 
     def getFaces(self):
-        faceTopoChannel = self.channels.getFaceTopoChannel()        
+        faceTopoChannel = self.channels.getFaceTopoChannel()
         
         if faceTopoChannel is None:
             return ()
