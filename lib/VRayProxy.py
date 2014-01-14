@@ -6,13 +6,13 @@
 # Author: Andrei Izrantcev
 # E-Mail: andrei.izrantcev@chaosgroup.com
 #
-# This program is free software; you can redistribute it and/or
+# This program is free software you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
-# as published by the Free Software Foundation; either version 2
+# as published by the Free Software Foundation either version 2
 # of the License, or (at your option) any later version.
 #
 # This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# but WITHOUT ANY WARRANTY without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 # GNU General Public License for more details.
 #
@@ -33,15 +33,6 @@ from math import fmod
 # Debug stuff
 #
 USE_DEBUG = False
-
-# Colored output
-#
-COLOR_RED     = "\033[0;31m"
-COLOR_GREEN   = "\033[0;32m"
-COLOR_YELLOW  = "\033[0;33m"
-COLOR_BLUE    = "\033[0;34m"
-COLOR_MAGENTA = "\033[0;35m"
-COLOR_DEFAULT = "\033[0m"
 
 # VRayProxy constants
 #
@@ -378,29 +369,34 @@ class MeshFile(MeshFileReader):
         self.readLookUpTable()
 
 
-    def getFrameByType(self, animType, frame):
-        frameInterval = len(self.frames)
-        frameIndex    = frame
+    def getFrameByType(self, animType, animOffset, speed, frame):
+        def clamp(value, value_min, value_max):
+            return max(min(value, value_max), value_min)
 
-        if animType in {'1','ONCE'}:
-            if frameIndex >= animationEnd:
-                frameIndex = animationEnd
-            if frameIndex <= animationStart:
-                frameIndex = animationStart
+        animLength = len(self.frames)
+        animStart  = 0
+
+        if animType in {'0', 'LOOP'}:
+            frame = fmod(animOffset+(frame-animStart)*speed, animLength)
+            if frame < 0:
+                frame += animLength
+            frame += animStart
+
+        elif animType in {'1', 'ONCE'}:
+            frame = clamp(animOffset+(frame-animStart)*speed, 0.0, animLength-1)+animStart
 
         elif animType in {'2', 'PINGPONG'}:
-            frameIndex = fmod(frameIndex, frameInterval*2-2)
-            if frameIndex < 0:
-                frameIndex += frameInterval*2-2
-            if frameIndex >= frameInterval:
-                frameIndex = 2*frameInterval-1-frameIndex;
+            frame = fmod(animOffset+(frame-animStart)*speed, animLength*2-2) # subtract 2 to remove the duplicate frames
+            if frame < 0:
+                frame += 2*animLength-2
+            if frame >= animLength:
+                frame = 2*animLength-2-frame
+            frame += animStart*speed
 
-        elif animType in {'0', 'LOOP'}:
-            frameIndex = fmod(frameIndex, frameInterval)
-            if frameIndex<0:
-                frameIndex+=frameInterval
+        elif animType in {'3', 'STILL'}:
+            frame = clamp(animOffset+animStart, 0.0, animLength-1.0)
 
-        return frameIndex
+        return frame
 
 
     def getPreviewVoxel(self, frameInfo):
@@ -410,8 +406,8 @@ class MeshFile(MeshFileReader):
         return None
 
 
-    def getPreviewMesh(self, animType, frame=0):
-        frameIndex = self.getFrameByType(animType, frame)
+    def getPreviewMesh(self, animType, animOffset, speed, frame=0):
+        frameIndex = self.getFrameByType(animType, animOffset, speed, frame)
         if frameIndex not in self.frames:
             return None
 
