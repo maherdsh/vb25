@@ -242,11 +242,6 @@ class MeshVoxel(MeshFileReader):
         self.meshFile = meshFile
         self.channels = VoxelChannels(self.meshFile)
 
-    def loadInfo(self):
-        self.fileOffset = self.binRead("Q", 8)[0]
-        self.bbox       = self.binRead("6f", 24)
-        self.flags      = self.binRead("I", 4)[0]
-
     def printInfo(self):
         self.report("Voxel")
         self.report("  fileOffset = %i" % (self.fileOffset))
