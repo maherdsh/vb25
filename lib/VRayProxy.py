@@ -27,6 +27,9 @@ import os
 import sys
 import zlib
 
+from math import fmod
+
+
 # Debug stuff
 #
 USE_DEBUG = False
@@ -109,7 +112,7 @@ class MeshFileReader(object):
 
     def report(self, *args):
         if USE_DEBUG:
-            print(args)
+            print(*args)
 
     def binRead(self, format, length):
         rawData = self.meshFile.read(length)
@@ -283,32 +286,37 @@ class MeshVoxel(MeshFileReader):
         return vertexArray
 
 
+class VoxelInfo:
+    fileOffset = None
+    bbox       = None
+    flags      = None
+
+
+class FrameInfo:
+    numVoxels = None
+    voxels    = None
+
+    def __init__(self):
+        self.voxels = []
+
 
 class MeshFile(MeshFileReader):
-    meshFilepath = None
-
     vrayID       = None
     fileVersion  = None
     lookupOffset = None
 
-    voxels    = None
-    numVoxels = None
+    frames = None
 
     def __init__(self, filepath):
-        self.meshFilepath = os.path.expanduser(filepath)
-        self.meshFile     = open(self.meshFilepath, "rb")
+        self.meshFile = open(os.path.expanduser(filepath), "rb")
+        self.frames = {}
 
-        self.voxels = []
 
-    def __del__(self):
-        if self.meshFile is None:
-            return
-        self.meshFile.close()
-    
-    def readFile(self):
+    def readHeader(self):
         self.vrayID = self.binRead("7s", 7)[0][:-1]
-        
+
         if self.vrayID == b'vrmesh':
+            # New format
             self.fileVersion = self.binRead("I", 4)[0]
         else:
             # Old format
@@ -318,53 +326,124 @@ class MeshFile(MeshFileReader):
 
         self.lookupOffset = self.binRead("Q", 8)[0]
 
-        self.report("MeshFile:", self.meshFilepath)
-        self.report("  fileID       = %s" % (self.vrayID))
-        self.report("  fileVersion  = 0x%X" % (self.fileVersion))
-        self.report("  lookupOffset = %i" % (self.lookupOffset))
-        
+        self.report("MeshFile:", self.meshFile.name)
+        self.report("  fileID       = %s" % self.vrayID)
+        self.report("  fileVersion  = 0x%X" % self.fileVersion)
+        self.report("  lookupOffset = %i" % self.lookupOffset)
+
+
+    def readLookUpTable(self):
+        def readVoxelInfo():
+            vi = VoxelInfo()
+
+            vi.fileOffset = self.binRead("Q", 8)[0]
+            vi.bbox       = self.binRead("6f", 24)
+            vi.flags      = self.binRead("I", 4)[0]
+
+            return vi
+
+        def readFrameInfo():
+            numVoxels  = self.binRead("I", 4)[0]
+            if numVoxels == 0:
+                return None
+
+            frameInfo = FrameInfo()
+            frameInfo.numVoxels = numVoxels
+
+            for v in range(numVoxels):
+                frameInfo.voxels.append(readVoxelInfo())
+
+            return frameInfo
+
         self.meshFile.seek(self.lookupOffset)
-        self.numVoxels = self.binRead("I", 4)[0]
 
-        self.report("  numVoxels    = %i" % (self.numVoxels))
-        self.report("")
+        frameCount = 0
+        while True:
+            fi = readFrameInfo()
+            if not fi:
+                break
+            self.frames[frameCount] = fi
+            frameCount += 1
 
-        for i in range(self.numVoxels):
-            voxel = MeshVoxel(self.meshFile)
-            voxel.loadInfo()
-            voxel.printInfo()
+        for frameNumber in self.frames:
+            fi = self.frames[frameNumber]
 
-            self.voxels.append(voxel)
+            self.report("Frame %i:" % frameNumber)
+            self.report("  numVoxels = %s" % fi.numVoxels)
 
-        for voxel in self.voxels:
-            voxel.loadData()
+            for v,vi in enumerate(fi.voxels):
+                self.report("  Voxel %i" % v)
+                self.report("    fileOffset = %i" % vi.fileOffset)
+                self.report("    bbox       = %s" % ("%.2f,%.2f,%.2f; %.2f,%.2f,%.2f" % (vi.bbox)))
+                self.report("    flags      = %s" % VoxelFlags[vi.flags])
 
-        return None
 
-    def getVoxelByType(self, voxelType=MVF_PREVIEW_VOXEL):
-        for voxel in self.voxels:
-            if voxel.flags == voxelType:
+    def readFile(self):
+        self.readHeader()
+        self.readLookUpTable()
+
+
+    def getFrameByType(self, animType, frame):
+        frameInterval = len(self.frames)
+        frameIndex    = frame
+
+        if animType in {'1','ONCE'}:
+            if frameIndex >= animationEnd:
+                frameIndex = animationEnd
+            if frameIndex <= animationStart:
+                frameIndex = animationStart
+
+        elif animType in {'2', 'PINGPONG'}:
+            frameIndex = fmod(frameIndex, frameInterval*2-2)
+            if frameIndex < 0:
+                frameIndex += frameInterval*2-2
+            if frameIndex >= frameInterval:
+                frameIndex = 2*frameInterval-1-frameIndex;
+
+        elif animType in {'0', 'LOOP'}:
+            frameIndex = fmod(frameIndex, frameInterval)
+            if frameIndex<0:
+                frameIndex+=frameInterval
+
+        return frameIndex
+
+
+    def getPreviewVoxel(self, frameInfo):
+        for voxel in frameInfo.voxels:
+            if voxel.flags == MVF_PREVIEW_VOXEL:
                 return voxel
         return None
 
 
+    def getPreviewMesh(self, animType, frame=0):
+        frameIndex = self.getFrameByType(animType, frame)
+        if frameIndex not in self.frames:
+            return None
+
+        voxelInfo = self.getPreviewVoxel(self.frames[frameIndex])
+        if not voxelInfo:
+            return None
+
+        voxel = MeshVoxel(self.meshFile)
+        voxel.fileOffset = voxelInfo.fileOffset
+        voxel.bbox       = voxelInfo.bbox
+        voxel.flags      = voxelInfo.flags
+
+        voxel.loadData()
+
+        faces    = voxel.getFaces()
+        vertices = voxel.getVertices()
+
+        return { 'vertices' : vertices, 'faces' : faces }
+
+
 def main():
-    testFile = "~/devel/vrayblender/test-suite/armadillo.vrmesh"
+    testFile = "~/devel/vrayblender/test-suite/vrmesh/animated_mesh.vrmesh"
 
     meshFile = MeshFile(testFile)
-    result = meshFile.readFile()
-    
-    if result is not None:
-        self.report("Error parsing file:", testFile)
-        sys.exit(1)
+    meshFile.readFile()
 
-    previewVoxel = meshFile.getVoxelByType(MVF_PREVIEW_VOXEL)
-
-    faces = previewVoxel.getFaces()
-    vertices = previewVoxel.getVertices()
-
-    print("Vertices:", vertices)
-    print("Faces:", faces)
+    mesh = meshFile.getPreviewMesh(0)
 
 
 if __name__ == '__main__':
