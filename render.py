@@ -1624,7 +1624,7 @@ def write_scene(bus):
 
 	del exclude_list
 
-	def write_frame(bus):
+	def write_frame(bus, checkAnimated=False):
 		timer= time.clock()
 		scene= bus['scene']
 
@@ -1661,9 +1661,17 @@ def write_scene(bus):
 		if VRayExporter.debug:
 			print_dict(scene, "Hide from view", bus['visibility'])
 
+		if not checkAnimated:
+			write_settings(bus)
+
 		for ob in bus['objects']:
 			if not object_visible(bus, ob):
 				continue
+
+			# Check if smth on object is animated
+			if checkAnimated:
+				if not is_animated(ob):
+					continue
 
 			debug(scene, "{0}: {1:<32}".format(ob.type, color(ob.name, 'green')), VRayExporter.debug)
 
@@ -1691,13 +1699,22 @@ def write_scene(bus):
 
 			_write_object(bus)
 
+		# TODO: Add camera animation detection
+		#
 		PLUGINS['CAMERA']['CameraPhysical'].write(bus)
 		PLUGINS['SETTINGS']['BakeView'].write(bus)
 		PLUGINS['SETTINGS']['RenderView'].write(bus)
 		PLUGINS['CAMERA']['CameraStereoscopic'].write(bus)
 
-		# Sphere fade could be animated
-		PLUGINS['SETTINGS']['SettingsEnvironment'].WriteSphereFade(bus)
+		# SphereFade could be animated
+		# We already export SphereFade data in settings export,
+		# so skip first frame
+		if checkAnimated:
+			PLUGINS['SETTINGS']['SettingsEnvironment'].WriteSphereFade(bus)
+
+		if not checkAnimated:
+			for key in bus['files']:
+				bus['files'][key].write("\n// End of static data\n")
 
 		debug(scene, "Writing frame {0}... done {1:<64}".format(scene.frame_current, "[%.2f]"%(time.clock() - timer)))
 
@@ -1713,14 +1730,26 @@ def write_scene(bus):
 		write_geometry(bus)
 
 	if VRayExporter.animation and VRayExporter.animation_type in {'FULL', 'NOTMESHES'}:
-		selected_frame= scene.frame_current
-		f= scene.frame_start
+		# Store current frame
+		selected_frame = scene.frame_current
+
+		# Export full first frame
+		f = scene.frame_start
+		scene.frame_set(f)
+		write_frame(bus)
+		f += scene.frame_step
+
+		# Export the rest of frames checking
+		# if stuff is animated
+		#
 		while(f <= scene.frame_end):
 			if bus['engine'] and bus['engine'].test_break():
 				return
 			scene.frame_set(f)
-			write_frame(bus)
-			f+= scene.frame_step
+			write_frame(bus, checkAnimated=VRayExporter.check_animated)
+			f += scene.frame_step
+
+		# Restore selected frame
 		scene.frame_set(selected_frame)
 	else:
 		if VRayExporter.camera_loop:
@@ -2018,7 +2047,6 @@ def close_files(bus):
 def export_and_run(bus):
 	err = write_scene(bus)
 
-	write_settings(bus)
 	close_files(bus)
 
 	if not err:

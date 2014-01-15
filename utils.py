@@ -47,6 +47,8 @@ import bpy
 import mathutils
 
 ''' vb modules '''
+import _vray_for_blender
+
 from vb25.plugins import *
 
 PLATFORM= sys.platform
@@ -453,8 +455,8 @@ COLOR_TABLE= {
 }
 
 ARCH= platform.architecture()[0]
-TEX_TYPES=  ('IMAGE', 'VRAY')
-GEOM_TYPES= ('MESH', 'CURVE', 'SURFACE', 'META', 'FONT')
+TEX_TYPES=  {'IMAGE', 'VRAY'}
+GEOM_TYPES= {'MESH', 'CURVE', 'SURFACE', 'META', 'FONT'}
 
 none_matrix= mathutils.Matrix(((0.0,0.0,0.0,0.0),(0.0,0.0,0.0,0.0),(0.0,0.0,0.0,0.0),(0.0,0.0,0.0,0.0)))
 
@@ -581,6 +583,55 @@ def a(scene, t):
 	return p(t)
 
 
+# Checks if object is animated
+#
+# TODO: cache results
+#
+def is_animated(ob):
+	print("ob.name", ob.name)
+	print("ob.animation_data",ob.animation_data)
+
+	if ob.animation_data:
+		return True
+
+	if ob.type in GEOM_TYPES:
+		# Check if material is animated
+		if len(ob.material_slots):
+			for slot in ob.material_slots:
+				ma = slot.material
+				if not ma:
+					continue
+				if ma.animation_data:
+					return True
+				# Check if texture is animated
+				if len(ma.texture_slots):
+					for tSlot in ma.texture_slots:
+						if not tSlot:
+							continue
+						if not tSlot.texture:
+							continue
+						if tSlot.texture.animation_data:
+							return True
+	elif ob.type in {'LAMP'}:
+		pass
+
+	return False
+
+
+# Checks if objects mesh is animated
+def is_data_animated(ob):
+	if not ob.data:
+		return False
+
+	print("ob.data.name", ob.name)
+	print("ob.data.animation_data", ob.data.animation_data)
+
+	if ob.data.animation_data:
+		return True
+	if ob.active_shape_key:
+		return True
+	return False
+
 
 # Hex value format
 def HexFormat(value):
@@ -590,36 +641,12 @@ def HexFormat(value):
         bytes= struct.pack('<i', value)
     return ''.join(["%02X" % b for b in bytes])
 
-# Helper function to convert a value to
-# hex in vrscene format
-def double_to_hex(value):
-	bytes = struct.pack('<d', value)
-	return ''.join([ "%X" % b for b in bytes ])
-
-def to_vrscene_hex(value):
-	if type(value) is float:
-		bytes = struct.pack('<f', value)
-	else:
-		bytes = struct.pack('<i', value)
-	return ''.join([ "%02X" % b for b in bytes ])
-
-
-# Helper function to convert mathutils.Vector to
-# hex vector in vrscene format
-def to_vrscene_hex_vector(vector):
-	return ''.join([ to_vrscene_hex(v) for v in vector ])
-
-def to_double_hex_vector(vector):
-	return ''.join([ double_to_hex(v) for v in vector ])
-
 
 # Transform matrix string
 def transform(m):
+	if hasattr(_vray_for_blender, 'getTransformHex'):
+		return _vray_for_blender.getTransformHex(m.copy())
 	return "Transform(Matrix(Vector(%f,%f,%f),Vector(%f,%f,%f),Vector(%f,%f,%f)),Vector(%f,%f,%f))" % (m[0][0], m[1][0], m[2][0], m[0][1], m[1][1], m[2][1], m[0][2], m[1][2], m[2][2], m[0][3], m[1][3], m[2][3])
-	# return 'TransformHex("%s%s%s%s")' % (to_vrscene_hex_vector(m.col[0]),
-	# 	to_vrscene_hex_vector(m.col[1]),
-	# 	to_vrscene_hex_vector(m.col[2]),
-	# 	to_double_hex_vector(m.translation))
 
 
 # Clean string from forbidden chars

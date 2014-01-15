@@ -33,6 +33,7 @@ from bpy.props import *
 from vb25.utils import *
 from vb25.ui.ui import *
 from vb25.plugins import *
+from vb25 import version
 
 
 class VRAY_MT_preset_IM(bpy.types.Menu):
@@ -265,6 +266,8 @@ class VRAY_RP_render(VRayRenderPanel, bpy.types.Panel):
 			col.prop(SettingsOptions, 'gi_dontRenderImage')
 		col.prop(VRayExporter, 'use_still_motion_blur')
 		col.label(text="Options:")
+		if VRayExporter.animation:
+			col.prop(VRayExporter, 'check_animated')
 		col.prop(VRayExporter, 'draft')
 
 		layout.separator()
@@ -360,7 +363,6 @@ class VRAY_RP_exporter(VRayRenderPanel, bpy.types.Panel):
 			col= split.column()
 		col.label(text="Mesh export:")
 		col.prop(ve, 'mesh_active_layers', text= "Active layers")
-		# col.prop(ve, 'check_animated')
 		col.prop(ve, 'use_instances')
 		# col.prop(SettingsOptions, 'geom_displacement')
 		col.prop(ve, 'mesh_debug')
@@ -1286,7 +1288,7 @@ class VRAY_RP_about(VRayRenderPanel, bpy.types.Panel):
 
 		split= layout.split()
 		col= split.column()
-		col.label(text="V-Ray/Blender")
+		col.label(text="V-Ray/Blender %s" % version.VERSION)
 		col.separator()
 		col.label(text="Developer: Andrey Izrantsev")
 		col.label(text="URL: http://vray.cgdo.ru")
