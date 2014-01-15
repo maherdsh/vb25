@@ -396,7 +396,7 @@ class MeshFile(MeshFileReader):
         elif animType in {'3', 'STILL'}:
             frame = clamp(animOffset+animStart, 0.0, animLength-1.0)
 
-        return frame
+        return int(frame)
 
 
     def getPreviewVoxel(self, frameInfo):
