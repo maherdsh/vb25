@@ -138,6 +138,7 @@ class VRAY_SP_includer(VRayScenePanel, bpy.types.Panel):
 	def draw_header(self, context):
 		VRayScene = context.scene.vray
 		Includer  = VRayScene.Includer
+		self.layout.label(text="", icon='VRAY_LOGO_MONO')
 		self.layout.prop(Includer, 'use', text="")
 
 	def draw(self, context):

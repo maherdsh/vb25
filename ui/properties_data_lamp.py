@@ -32,7 +32,7 @@ from vb25.utils import *
 from vb25.ui.ui import *
 
 
-class VRAY_DP_context_lamp(VRayDataPanel, bpy.types.Panel):
+class VRAY_DP_context_lamp(VRayLampPanel, bpy.types.Panel):
 	bl_label       = ""
 	bl_options     = {'HIDE_HEADER'}
 
@@ -66,7 +66,7 @@ class VRAY_DP_context_lamp(VRayDataPanel, bpy.types.Panel):
 			layout.prop(lamp, 'type')
 
 
-class VRAY_DP_light(VRayDataPanel, bpy.types.Panel):
+class VRAY_DP_light(VRayLampPanel, bpy.types.Panel):
 	bl_label       = "Lamp"
 
 	COMPAT_ENGINES = {'VRAY_RENDER','VRAY_RENDERER','VRAY_RENDER_PREVIEW'}
@@ -122,7 +122,7 @@ class VRAY_DP_light(VRayDataPanel, bpy.types.Panel):
 			col.prop(VRayLamp,'storeWithIrradianceMap')
 
 
-class VRAY_DP_light_shape(VRayDataPanel, bpy.types.Panel):
+class VRAY_DP_light_shape(VRayLampPanel, bpy.types.Panel):
 	bl_label       = "Shape"
 
 	COMPAT_ENGINES = {'VRAY_RENDER','VRAY_RENDERER','VRAY_RENDER_PREVIEW'}
@@ -258,7 +258,7 @@ class VRAY_DP_light_shape(VRayDataPanel, bpy.types.Panel):
 				col.prop(VRayLight, 'dome_emitRadius')
 
 
-class VRAY_DP_light_shadows(VRayDataPanel, bpy.types.Panel):
+class VRAY_DP_light_shadows(VRayLampPanel, bpy.types.Panel):
 	bl_label   = "Shadows"
 	bl_options = {'DEFAULT_CLOSED'}
 
@@ -297,7 +297,7 @@ class VRAY_DP_light_shadows(VRayDataPanel, bpy.types.Panel):
 
 
 
-class VRAY_DP_light_advanced(VRayDataPanel, bpy.types.Panel):
+class VRAY_DP_light_advanced(VRayLampPanel, bpy.types.Panel):
 	bl_label   = "Advanced"
 	bl_options = {'DEFAULT_CLOSED'}
 
@@ -325,7 +325,7 @@ class VRAY_DP_light_advanced(VRayDataPanel, bpy.types.Panel):
 		col.prop(vl,'areaSpeculars')
 
 
-class VRAY_DP_include_exclude(VRayDataPanel, bpy.types.Panel):
+class VRAY_DP_include_exclude(VRayLampPanel, bpy.types.Panel):
 	bl_label   = "Include / Exclude"
 	bl_options = {'DEFAULT_CLOSED'}
 

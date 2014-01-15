@@ -184,6 +184,7 @@ class VRAY_DP_physical_camera(VRayDataPanel, bpy.types.Panel):
 		ca= context.camera
 		VRayCamera= ca.vray
 		CameraPhysical= VRayCamera.CameraPhysical
+		self.layout.label(text="", icon='VRAY_LOGO_MONO')
 		self.layout.prop(CameraPhysical, 'use', text="")
 
 	def draw(self, context):
@@ -298,6 +299,7 @@ class VRAY_DP_camera_stereoscopic(VRayDataPanel, bpy.types.Panel):
 		else:
 			icon_name = "CHECKBOX_DEHLT"
 
+		self.layout.label(text="", icon='VRAY_LOGO_MONO')
 		self.layout.operator('vray.create_stereo_cam', text="", icon=icon_name, emboss=False)
 
 	def draw(self, context):
@@ -319,8 +321,6 @@ class VRAY_DP_camera_stereoscopic(VRayDataPanel, bpy.types.Panel):
 		sub.prop(CameraStereoscopic, 'show_cams', text="Show L/R cameras")
 		if CameraStereoscopic.show_cams:
 			sub.prop(CameraStereoscopic, 'show_limits', text="Show Limits")
-		
-
 
 
 class VRAY_DP_hide_from_view(VRayDataPanel, bpy.types.Panel):
@@ -336,6 +336,7 @@ class VRAY_DP_hide_from_view(VRayDataPanel, bpy.types.Panel):
 	def draw_header(self, context):
 		ca= context.camera
 		VRayCamera= ca.vray
+		self.layout.label(text="", icon='VRAY_LOGO_MONO')
 		self.layout.prop(VRayCamera, 'hide_from_view', text="")
 
 	def draw(self, context):

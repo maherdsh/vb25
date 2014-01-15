@@ -55,6 +55,7 @@ class VRAY_OBP_override(VRayObjectPanel, bpy.types.Panel):
 	def draw_header(self, context):
 		ob= context.object
 		plugin= ob.vray.MtlOverride
+		self.layout.label(text="", icon='VRAY_LOGO_MONO')
 		self.layout.prop(plugin, 'use', text="")
 
 	def draw(self, context):
@@ -99,6 +100,7 @@ class VRAY_OBP_wrapper(VRayObjectPanel, bpy.types.Panel):
 	def draw_header(self, context):
 		ob= context.object
 		plugin= ob.vray.MtlWrapper
+		self.layout.label(text="", icon='VRAY_LOGO_MONO')
 		self.layout.prop(plugin, 'use', text="")
 
 	def draw(self, context):
@@ -175,6 +177,7 @@ class VRAY_OBP_render(VRayObjectPanel, bpy.types.Panel):
 	def draw_header(self, context):
 		ob= context.object
 		plugin= ob.vray.MtlRenderStats
+		self.layout.label(text="", icon='VRAY_LOGO_MONO')
 		self.layout.prop(plugin, 'use', text="")
 
 	def draw(self, context):
@@ -224,6 +227,7 @@ class VRAY_OBP_displacement(VRayObjectPanel, bpy.types.Panel):
 		ob= context.object
 		VRayObject= ob.vray
 		GeomDisplacedMesh= VRayObject.GeomDisplacedMesh
+		self.layout.label(text="", icon='VRAY_LOGO_MONO')
 		self.layout.prop(GeomDisplacedMesh, 'use', text="")
 
 	def draw(self, context):
@@ -288,6 +292,7 @@ class VRAY_OBP_lightmesh(VRayObjectPanel, bpy.types.Panel):
 		ob= context.object
 		VRayObject= ob.vray
 		LightMesh= VRayObject.LightMesh
+		self.layout.label(text="", icon='VRAY_LOGO_MONO')
 		self.layout.prop(LightMesh, 'use', text="")
 
 	def draw(self, context):
@@ -362,6 +367,7 @@ class VRAY_OBP_subdivision(VRayObjectPanel, bpy.types.Panel):
 		ob= context.object
 		VRayObject= ob.vray
 		GeomStaticSmoothedMesh= VRayObject.GeomStaticSmoothedMesh
+		self.layout.label(text="", icon='VRAY_LOGO_MONO')
 		self.layout.prop(GeomStaticSmoothedMesh, 'use', text="")
 
 	def draw(self, context):
@@ -411,6 +417,7 @@ class VRAY_OBP_VRayPattern(VRayObjectPanel, bpy.types.Panel):
 		ob = context.object
 		VRayObject = ob.vray
 		GeomVRayPattern = VRayObject.GeomVRayPattern
+		self.layout.label(text="", icon='VRAY_LOGO_MONO')
 		self.layout.prop(GeomVRayPattern, 'use', text="")
 
 	def draw(self, context):

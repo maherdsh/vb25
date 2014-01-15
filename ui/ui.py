@@ -100,7 +100,22 @@ def texture_type_poll(cls, context, tex, tex_type):
 	return tex and tex.type == 'VRAY' and tex.vray.type == tex_type
 
 
-class VRayDataPanel():
+class VRayPanel:
+	def draw_header(self, context):
+		self.layout.label(text="", icon='VRAY_LOGO_MONO')
+
+
+class VRayDataPanel(VRayPanel):
+	bl_space_type  = 'PROPERTIES'
+	bl_region_type = 'WINDOW'
+	bl_context     = 'data'
+
+	@classmethod
+	def poll(cls, context):
+		return engine_poll(cls, context)
+
+
+class VRayLampPanel():
 	bl_space_type  = 'PROPERTIES'
 	bl_region_type = 'WINDOW'
 	bl_context     = 'data'
@@ -131,7 +146,7 @@ class VRayMaterialPanel():
 		return True
 
 
-class VRayObjectPanel():
+class VRayObjectPanel(VRayPanel):
 	bl_space_type  = 'PROPERTIES'
 	bl_region_type = 'WINDOW'
 	bl_context     = 'object'
@@ -141,7 +156,7 @@ class VRayObjectPanel():
 		return engine_poll(cls, context)
 
 
-class VRayParticlePanel():
+class VRayParticlePanel(VRayPanel):
 	bl_space_type  = 'PROPERTIES'
 	bl_region_type = 'WINDOW'
 	bl_context     = 'particle'
@@ -161,7 +176,7 @@ class VRayRenderPanel():
 		return engine_poll(cls, context)
 
 
-class VRayRenderLayersPanel():
+class VRayRenderLayersPanel(VRayPanel):
 	bl_space_type  = 'PROPERTIES'
 	bl_region_type = 'WINDOW'
 	bl_context     = 'render_layer'
@@ -171,7 +186,7 @@ class VRayRenderLayersPanel():
 		return engine_poll(cls, context)
 
 
-class VRayScenePanel():
+class VRayScenePanel(VRayPanel):
 	bl_space_type  = 'PROPERTIES'
 	bl_region_type = 'WINDOW'
 	bl_context     = 'scene'
@@ -181,7 +196,7 @@ class VRayScenePanel():
 		return engine_poll(cls, context)
 
 
-class VRayTexturePanel():
+class VRayTexturePanel(VRayPanel):
 	bl_space_type  = 'PROPERTIES'
 	bl_region_type = 'WINDOW'
 	bl_context     = 'texture'
