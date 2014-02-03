@@ -25,10 +25,8 @@
 '''
 
 import os
+import bpy
 import inspect
-
-
-USE_DEBUG = True
 
 
 # https://gist.github.com/techtonik/2151727
@@ -60,6 +58,6 @@ def caller_name(skip=2):
 
 
 def msg(msg=""):
-    if USE_DEBUG:
+    if bpy.app.debug:
         print("...", caller_name())
         print("......", msg)
