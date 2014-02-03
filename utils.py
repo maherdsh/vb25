@@ -1056,6 +1056,9 @@ def get_vray_exporter_path():
 	for vb_path in bpy.utils.script_paths(os.path.join('addons','vb25')):
 		if vb_path:
 			return vb_path
+	for vb_path in bpy.utils.script_paths(os.path.join('startup','vb25')):
+		if vb_path:
+			return vb_path
 	return ""
 
 
