@@ -60,9 +60,11 @@ def register():
 	ui.register()
 	events.register()
 	plugins.add_properties()
+	render_ops.register()
 
 
 def unregister():
+	render_ops.unregister()
 	plugins.remove_properties()
 	events.unregister()
 	ui.unregister()
