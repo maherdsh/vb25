@@ -738,6 +738,12 @@ def generate_object_list(object_names_string= None, group_names_string= None):
 			if gr_name in bpy.data.groups:
 				object_list.extend(bpy.data.groups[gr_name].objects)
 
+	dupliGroup = []
+	for ob in object_list:
+		if ob.dupli_type == 'GROUP' and ob.dupli_group:
+			dupliGroup.extend(ob.dupli_group.objects)
+	object_list.extend(dupliGroup)
+
 	return object_list
 
 
