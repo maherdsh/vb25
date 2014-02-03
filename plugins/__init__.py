@@ -1908,9 +1908,12 @@ def add_properties():
 
 
 def remove_properties():
+	global PLUGINS_DIRS
+
 	for plugDir in PLUGINS_DIRS:
 		if plugDir in sys.path:
 			sys.path.remove(plugDir)
+	PLUGINS_DIRS = []
 
 	for pluginType in PLUGINS:
 		for plugin in PLUGINS[pluginType]:
