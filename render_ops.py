@@ -124,7 +124,6 @@ class VRAY_OT_update(bpy.types.Operator):
 		return {'FINISHED'}
 
 
-bpy.utils.register_class(VRAY_OT_update)
 
 
 '''
@@ -147,7 +146,6 @@ class VRAY_OT_lens_shift(bpy.types.Operator):
 
 		return {'FINISHED'}
 
-bpy.utils.register_class(VRAY_OT_lens_shift)
 
 
 '''
@@ -168,7 +166,6 @@ class VRAY_OT_effect_add(bpy.types.Operator):
 
 		return {'FINISHED'}
 
-bpy.utils.register_class(VRAY_OT_effect_add)
 
 
 class VRAY_OT_effect_remove(bpy.types.Operator):
@@ -187,7 +184,6 @@ class VRAY_OT_effect_remove(bpy.types.Operator):
 
 		return {'FINISHED'}
 
-bpy.utils.register_class(VRAY_OT_effect_remove)
 
 
 class VRAY_OT_effect_up(bpy.types.Operator):
@@ -209,7 +205,6 @@ class VRAY_OT_effect_up(bpy.types.Operator):
 
 		return {'FINISHED'}
 
-bpy.utils.register_class(VRAY_OT_effect_up)
 
 
 class VRAY_OT_effect_down(bpy.types.Operator):
@@ -231,7 +226,6 @@ class VRAY_OT_effect_down(bpy.types.Operator):
 
 		return {'FINISHED'}
 
-bpy.utils.register_class(VRAY_OT_effect_down)
 
 
 '''
@@ -254,7 +248,6 @@ class VRAY_OT_includer_add(bpy.types.Operator):
 
 
 
-bpy.utils.register_class(VRAY_OT_includer_add)
 
 class VRAY_OT_includer_remove(bpy.types.Operator):
 	bl_idname=      'vray.includer_remove'
@@ -271,7 +264,6 @@ class VRAY_OT_includer_remove(bpy.types.Operator):
 
 		return {'FINISHED'}
 
-bpy.utils.register_class(VRAY_OT_includer_remove)
 
 class VRAY_OT_includer_up(bpy.types.Operator):
 	bl_idname=      'vray.includer_up'
@@ -291,7 +283,6 @@ class VRAY_OT_includer_up(bpy.types.Operator):
 
 		return {'FINISHED'}
 
-bpy.utils.register_class(VRAY_OT_includer_up)
 
 class VRAY_OT_includer_down(bpy.types.Operator):
 	bl_idname=      'vray.includer_down'
@@ -311,7 +302,6 @@ class VRAY_OT_includer_down(bpy.types.Operator):
 
 		return {'FINISHED'}
 
-bpy.utils.register_class(VRAY_OT_includer_down)
 
 
 '''
@@ -351,7 +341,6 @@ class VRAY_OT_brdf_add(bpy.types.Operator):
 
 		return {'CANCELLED'}
 
-bpy.utils.register_class(VRAY_OT_brdf_add)
 
 
 class VRAY_OT_brdf_remove(bpy.types.Operator):
@@ -373,7 +362,6 @@ class VRAY_OT_brdf_remove(bpy.types.Operator):
 
 		return {'CANCELLED'}
 
-bpy.utils.register_class(VRAY_OT_brdf_remove)
 
 
 class VRAY_OT_brdf_up(bpy.types.Operator):
@@ -398,7 +386,6 @@ class VRAY_OT_brdf_up(bpy.types.Operator):
 
 		return {'CANCELLED'}
 
-bpy.utils.register_class(VRAY_OT_brdf_up)
 
 
 class VRAY_OT_brdf_down(bpy.types.Operator):
@@ -421,7 +408,6 @@ class VRAY_OT_brdf_down(bpy.types.Operator):
 
 			return {'FINISHED'}
 
-bpy.utils.register_class(VRAY_OT_brdf_down)
 
 
 '''
@@ -443,7 +429,6 @@ class VRAY_OT_channel_add(bpy.types.Operator):
 
 		return {'FINISHED'}
 
-bpy.utils.register_class(VRAY_OT_channel_add)
 
 
 class VRAY_OT_channel_del(bpy.types.Operator):
@@ -463,7 +448,6 @@ class VRAY_OT_channel_del(bpy.types.Operator):
 
 		return {'FINISHED'}
 
-bpy.utils.register_class(VRAY_OT_channel_del)
 
 
 '''
@@ -483,7 +467,6 @@ class VRAY_OT_node_add(bpy.types.Operator):
 
 		return {'FINISHED'}
 
-bpy.utils.register_class(VRAY_OT_node_add)
 
 
 class VRAY_OT_node_del(bpy.types.Operator):
@@ -504,7 +487,6 @@ class VRAY_OT_node_del(bpy.types.Operator):
 
 		return {'FINISHED'}
 
-bpy.utils.register_class(VRAY_OT_node_del)
 
 
 class VRAY_OT_dr_nodes_load(bpy.types.Operator):
@@ -554,8 +536,6 @@ class VRAY_OT_dr_nodes_save(bpy.types.Operator):
 
 		return {'FINISHED'}
 
-bpy.utils.register_class(VRAY_OT_dr_nodes_load)
-bpy.utils.register_class(VRAY_OT_dr_nodes_save)
 
 
 '''
@@ -642,7 +622,6 @@ class VRAY_OT_convert_scene(bpy.types.Operator):
 
 		return {'FINISHED'}
 
-bpy.utils.register_class(VRAY_OT_convert_scene)
 
 
 
@@ -655,7 +634,6 @@ class VRAY_OT_bake_procedural(bpy.types.Operator):
 		debug(context.scene, "Bake procedural: In progress...")
 		return {'FINISHED'}
 
-bpy.utils.register_class(VRAY_OT_bake_procedural)
 
 
 
@@ -701,7 +679,6 @@ class VRAY_OT_settings_to_text(bpy.types.Operator):
 
 		return {'FINISHED'}
 
-bpy.utils.register_class(VRAY_OT_settings_to_text)
 
 
 class VRAY_OT_flip_resolution(bpy.types.Operator):
@@ -723,7 +700,6 @@ class VRAY_OT_flip_resolution(bpy.types.Operator):
 
 		return {'FINISHED'}
 
-bpy.utils.register_class(VRAY_OT_flip_resolution)
 
 
 class VRAY_OT_proxy_load_preview(bpy.types.Operator):
@@ -773,7 +749,6 @@ class VRAY_OT_proxy_load_preview(bpy.types.Operator):
 
 		return {'FINISHED'}
 
-bpy.utils.register_class(VRAY_OT_proxy_load_preview)
 
 
 class VRAY_OT_create_proxy(bpy.types.Operator):
@@ -909,7 +884,6 @@ class VRAY_OT_create_proxy(bpy.types.Operator):
 
 		return {'FINISHED'}
 
-bpy.utils.register_class(VRAY_OT_create_proxy)
 
 
 '''
@@ -953,7 +927,6 @@ class VRAY_OT_write_scene(bpy.types.Operator):
 
 		return {'FINISHED'}
 
-bpy.utils.register_class(VRAY_OT_write_scene)
 
 
 class VRAY_OT_write_geometry(bpy.types.Operator):
@@ -989,7 +962,6 @@ class VRAY_OT_write_geometry(bpy.types.Operator):
 
 		return {'FINISHED'}
 
-bpy.utils.register_class(VRAY_OT_write_geometry)
 
 
 class VRAY_OT_write_vrscene(bpy.types.Operator):
@@ -1001,7 +973,6 @@ class VRAY_OT_write_vrscene(bpy.types.Operator):
 		bpy.ops.vray.export_vrscene()
 		return {'FINISHED'}
 
-bpy.utils.register_class(VRAY_OT_write_vrscene)
 
 
 class VRAY_OT_render(bpy.types.Operator):
@@ -1019,7 +990,6 @@ class VRAY_OT_render(bpy.types.Operator):
 
 		return {'FINISHED'}
 
-bpy.utils.register_class(VRAY_OT_render)
 
 
 class VRAY_OT_run(bpy.types.Operator):
@@ -1033,7 +1003,6 @@ class VRAY_OT_run(bpy.types.Operator):
 
 		return {'FINISHED'}
 
-bpy.utils.register_class(VRAY_OT_run)
 
 
 class VRAY_OT_terminate(bpy.types.Operator):
@@ -1050,7 +1019,6 @@ class VRAY_OT_terminate(bpy.types.Operator):
 
 		return {'FINISHED'}
 
-bpy.utils.register_class(VRAY_OT_terminate)
 
 
 class VRAY_OT_set_kelvin_color(bpy.types.Operator):
@@ -1146,7 +1114,6 @@ class VRAY_OT_set_kelvin_color(bpy.types.Operator):
 
 		return {'FINISHED'}
 
-bpy.utils.register_class(VRAY_OT_set_kelvin_color)
 
 
 class VRAY_OT_add_sky(bpy.types.Operator):
@@ -1173,7 +1140,6 @@ class VRAY_OT_add_sky(bpy.types.Operator):
 
 		return {'FINISHED'}
 
-bpy.utils.register_class(VRAY_OT_add_sky)
 
 
 
@@ -1217,7 +1183,6 @@ class VRAY_OT_copy_linked_materials(bpy.types.Operator):
 		debug(scene, "Object \"%s\" has no dupli-group assigned!" % (object.name), error= True)
 		return {'CANCELLED'}
 
-bpy.utils.register_class(VRAY_OT_copy_linked_materials)
 
 
 '''
@@ -1247,7 +1212,6 @@ class VRayRenderer(bpy.types.RenderEngine):
 		if err is not None:
 			self.report({'ERROR'}, err)
 
-bpy.utils.register_class(VRayRenderer)
 
 
 class VRayRendererPreview(bpy.types.RenderEngine):
@@ -1269,4 +1233,55 @@ class VRayRendererPreview(bpy.types.RenderEngine):
 			if err is not None:
 				self.report({'ERROR'}, err)
 
-bpy.utils.register_class(VRayRendererPreview)
+
+
+def GetRegClasses():
+	return (
+		VRAY_OT_update,
+		VRAY_OT_lens_shift,
+		VRAY_OT_effect_add,
+		VRAY_OT_effect_remove,
+		VRAY_OT_effect_up,
+		VRAY_OT_effect_down,
+		VRAY_OT_includer_add,
+		VRAY_OT_includer_remove,
+		VRAY_OT_includer_up,
+		VRAY_OT_includer_down,
+		VRAY_OT_brdf_add,
+		VRAY_OT_brdf_remove,
+		VRAY_OT_brdf_up,
+		VRAY_OT_brdf_down,
+		VRAY_OT_channel_add,
+		VRAY_OT_channel_del,
+		VRAY_OT_node_add,
+		VRAY_OT_node_del,
+		VRAY_OT_dr_nodes_load,
+		VRAY_OT_dr_nodes_save,
+		VRAY_OT_convert_scene,
+		VRAY_OT_bake_procedural,
+		VRAY_OT_settings_to_text,
+		VRAY_OT_flip_resolution,
+		VRAY_OT_proxy_load_preview,
+		VRAY_OT_create_proxy,
+		VRAY_OT_write_scene,
+		VRAY_OT_write_geometry,
+		VRAY_OT_write_vrscene,
+		VRAY_OT_render,
+		VRAY_OT_run,
+		VRAY_OT_terminate,
+		VRAY_OT_set_kelvin_color,
+		VRAY_OT_add_sky,
+		VRAY_OT_copy_linked_materials,
+		VRayRenderer,
+		VRayRendererPreview,
+	)
+
+
+def register():
+	for regClass in GetRegClasses():
+		bpy.utils.register_class(regClass)
+
+
+def unregister():
+	for regClass in GetRegClasses():
+		bpy.utils.unregister_class(regClass)
