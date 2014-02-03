@@ -57,31 +57,12 @@ else:
 
 
 def register():
-	bpy.utils.register_module(__name__)
-
-	plugins.add_properties()
-
+	ui.register()
 	events.register()
-
-	wm = bpy.context.window_manager
-	kc = wm.keyconfigs.addon
-	if kc:
-		km = kc.keymaps.new('Screen', space_type='EMPTY', region_type='WINDOW')
-		kmi = km.keymap_items.new('vray.render', 'F10', 'PRESS')
+	plugins.add_properties()
 
 
 def unregister():
-	bpy.utils.unregister_module(__name__)
-
 	plugins.remove_properties()
-
 	events.unregister()
-
-	wm = bpy.context.window_manager
-	kc = wm.keyconfigs.addon
-	if kc:
-		km = kc.keymaps['Screen']
-		for kmi in km.keymap_items:
-			if kmi.idname == 'vray.render':
-				km.keymap_items.remove(kmi)
-				break
+	ui.unregister()
