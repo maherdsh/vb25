@@ -1208,7 +1208,12 @@ def init_files(bus):
 			filepath = os.path.normpath(os.path.join(export_directory, "..", "%s.vrscene" % (export_filename)))
 		else:
 			filepath = os.path.normpath(os.path.join(export_directory, "%s_%s.vrscene" % (export_filename, key)))
-		bus['files'][key] = open(filepath, 'w')
+
+		if not VRayExporter.auto_meshes and key == 'geometry':
+			bus['files'][key] = None
+		else:
+			bus['files'][key] = open(filepath, 'w')
+
 		bus['filenames'][key] = filepath
 
 	# Duplicate "Color mapping" setting to a separate file for correct preview
