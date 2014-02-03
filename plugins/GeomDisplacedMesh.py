@@ -31,7 +31,7 @@ from bpy.props import *
 
 ''' vb modules '''
 from vb25.utils import *
-from vb25.ui.ui import *
+from vb25.ui import ui
 
 
 TYPE= 'GEOMETRY'
@@ -340,7 +340,7 @@ def write(bus):
 
 
 def influence(context, layout, slot):
-	wide_ui= context.region.width > narrowui
+	wide_ui= context.region.width > ui.narrowui
 
 	VRaySlot= slot.texture.vray_slot
 
@@ -350,7 +350,7 @@ def influence(context, layout, slot):
 
 	split= layout.split()
 	col= split.column()
-	factor_but(col, VRaySlot, 'map_displacement', 'displacement_mult', "Displace")
+	ui.factor_but(col, VRaySlot, 'map_displacement', 'displacement_mult', "Displace")
 	if wide_ui:
 		col= split.column()
 	col.active= VRaySlot.map_displacement

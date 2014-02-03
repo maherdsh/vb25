@@ -32,7 +32,7 @@ from bpy.props import *
 ''' vb modules '''
 from vb25.texture import *
 from vb25.utils   import *
-from vb25.ui.ui   import *
+from vb25.ui      import ui
 from vb25.lib     import AttributeUtils
 
 
@@ -184,7 +184,7 @@ def write(bus, VRayBRDF= None, base_name= None):
 
 
 def influence(context, layout, slot):
-	wide_ui = context.region.width > narrowui
+	wide_ui = context.region.width > ui.narrowui
 
 	VRaySlot = slot.texture.vray_slot
 
@@ -193,14 +193,14 @@ def influence(context, layout, slot):
 	col.label(text="Diffuse:")
 	split = layout.split()
 	col = split.column()
-	factor_but(col, VRaySlot, 'map_diffuse', 'diffuse_mult', "Diffuse")
+	ui.factor_but(col, VRaySlot, 'map_diffuse', 'diffuse_mult', "Diffuse")
 	if wide_ui:
 		col = split.column()
-	factor_but(col, VRaySlot, 'map_opacity', 'opacity_mult', "Opacity")
+	ui.factor_but(col, VRaySlot, 'map_opacity', 'opacity_mult', "Opacity")
 
 
 def gui(context, layout, BRDFLight, material= None):
-	wide_ui= context.region.width > narrowui
+	wide_ui= context.region.width > ui.narrowui
 
 	layout.label(text="Color:")
 

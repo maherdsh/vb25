@@ -31,7 +31,7 @@ from bpy.props import *
 
 ''' vb modules '''
 from vb25.utils import *
-from vb25.ui.ui import *
+from vb25.ui import ui
 
 
 TYPE= 'BRDF'
@@ -412,7 +412,7 @@ def write(bus, VRayBRDF= None, base_name= None):
 
 
 def influence(context, layout, slot):
-	wide_ui= context.region.width > narrowui
+	wide_ui= context.region.width > ui.narrowui
 
 	VRaySlot= slot.texture.vray_slot
 
@@ -421,27 +421,27 @@ def influence(context, layout, slot):
 	col.label(text="SSS:")
 	split= layout.split()
 	col= split.column()
-	factor_but(col, VRaySlot, 'map_overall_color',     'overall_color_mult',     "Overall")
-	factor_but(col, VRaySlot, 'map_sub_surface_color', 'sub_surface_color_mult', "Sub-surface")
+	ui.factor_but(col, VRaySlot, 'map_overall_color',     'overall_color_mult',     "Overall")
+	ui.factor_but(col, VRaySlot, 'map_sub_surface_color', 'sub_surface_color_mult', "Sub-surface")
 	if wide_ui:
 		col= split.column()
-	factor_but(col, VRaySlot, 'map_scatter_radius',    'scatter_radius_mult',    "Scatter")
+	ui.factor_but(col, VRaySlot, 'map_scatter_radius',    'scatter_radius_mult',    "Scatter")
 
 	layout.separator()
 
 	split= layout.split()
 	col= split.column()
-	factor_but(col, VRaySlot, 'map_diffuse_color',  'diffuse_color_mult',  "Diffuse")
-	factor_but(col, VRaySlot, 'map_diffuse_amount', 'diffuse_amount_mult', "Amount")
+	ui.factor_but(col, VRaySlot, 'map_diffuse_color',  'diffuse_color_mult',  "Diffuse")
+	ui.factor_but(col, VRaySlot, 'map_diffuse_amount', 'diffuse_amount_mult', "Amount")
 	if wide_ui:
 		col= split.column()
-	factor_but(col, VRaySlot, 'map_specular_color',      'specular_color_mult',      "Specular")
-	factor_but(col, VRaySlot, 'map_specular_amount',     'specular_amount_mult',     "Amount")
-	factor_but(col, VRaySlot, 'map_specular_glossiness', 'specular_glossiness_mult', "Glossiness")
+	ui.factor_but(col, VRaySlot, 'map_specular_color',      'specular_color_mult',      "Specular")
+	ui.factor_but(col, VRaySlot, 'map_specular_amount',     'specular_amount_mult',     "Amount")
+	ui.factor_but(col, VRaySlot, 'map_specular_glossiness', 'specular_glossiness_mult', "Glossiness")
 
 
 def gui(context, layout, BRDFSSS2Complex, material= None):
-	wide_ui= context.region.width > narrowui
+	wide_ui= context.region.width > ui.narrowui
 
 	split= layout.split()
 	col= split.column()

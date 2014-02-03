@@ -31,7 +31,7 @@ from bpy.props import *
 
 ''' vb modules '''
 from vb25.utils import *
-from vb25.ui.ui import *
+from vb25.ui import ui
 
 
 TYPE= 'TEXTURE'
@@ -481,13 +481,13 @@ def write(bus):
 '''
   GUI
 '''
-class VRAY_TP_Mapping(VRayTexturePanel, bpy.types.Panel):
+class VRAY_TP_Mapping(ui.VRayTexturePanel, bpy.types.Panel):
 	bl_label       = "Mapping"
 	COMPAT_ENGINES = {'VRAY_RENDER','VRAY_RENDER_PREVIEW'}
 
 	@classmethod
 	def poll(cls, context):
-		if not engine_poll(cls, context):
+		if not ui.engine_poll(cls, context):
 			return False
 
 		tex= context.texture
@@ -505,10 +505,10 @@ class VRAY_TP_Mapping(VRayTexturePanel, bpy.types.Panel):
 		return False
 
 	def draw(self, context):
-		wide_ui= context.region.width > narrowui
+		wide_ui= context.region.width > ui.narrowui
 		layout= self.layout
 
-		idblock = context_tex_datablock(context)
+		idblock = ui.context_tex_datablock(context)
 
 		ob=   context.object
 		sce=  context.scene
@@ -629,13 +629,13 @@ class VRAY_TP_Mapping(VRayTexturePanel, bpy.types.Panel):
 
 
 
-class VRAY_TP_Tiling(VRayTexturePanel, bpy.types.Panel):
+class VRAY_TP_Tiling(ui.VRayTexturePanel, bpy.types.Panel):
 	bl_label       = "Tiling"
 	COMPAT_ENGINES = {'VRAY_RENDER','VRAY_RENDER_PREVIEW'}
 
 	@classmethod
 	def poll(cls, context):
-		if not engine_poll(cls, context):
+		if not ui.engine_poll(cls, context):
 			return False
 
 		tex= context.texture
@@ -653,7 +653,7 @@ class VRAY_TP_Tiling(VRayTexturePanel, bpy.types.Panel):
 		return False
 
 	def draw(self, context):
-		wide_ui= context.region.width > narrowui
+		wide_ui= context.region.width > ui.narrowui
 		layout= self.layout
 
 		idblock = context_tex_datablock(context)
@@ -720,13 +720,13 @@ class VRAY_TP_Tiling(VRayTexturePanel, bpy.types.Panel):
 			sub.prop(VRayTexture, 'h')
 
 
-class VRAY_TP_Common(VRayTexturePanel, bpy.types.Panel):
+class VRAY_TP_Common(ui.VRayTexturePanel, bpy.types.Panel):
 	bl_label       = "Common"
 	COMPAT_ENGINES = {'VRAY_RENDER','VRAY_RENDER_PREVIEW'}
 
 	@classmethod
 	def poll(cls, context):
-		if not engine_poll(cls, context):
+		if not ui.engine_poll(cls, context):
 			return False
 
 		tex= context.texture
@@ -744,7 +744,7 @@ class VRAY_TP_Common(VRayTexturePanel, bpy.types.Panel):
 		return False
 
 	def draw(self, context):
-		wide_ui= context.region.width > narrowui
+		wide_ui= context.region.width > ui.narrowui
 		layout= self.layout
 
 		slot= getattr(context, 'texture_slot', None)
@@ -778,7 +778,19 @@ class VRAY_TP_Common(VRayTexturePanel, bpy.types.Panel):
 		# layout.operator("vray.bake_procedural", icon= 'TEXTURE')
 
 
+def GetRegClasses():
+	return (
+		VRAY_TP_Mapping,
+		VRAY_TP_Tiling,
+		VRAY_TP_Common,
+	)
 
-bpy.utils.register_class(VRAY_TP_Mapping)
-bpy.utils.register_class(VRAY_TP_Tiling)
-bpy.utils.register_class(VRAY_TP_Common)
+
+def register():
+	for regClass in GetRegClasses():
+		bpy.utils.register_class(regClass)
+
+
+def unregister():
+	for regClass in GetRegClasses():
+		bpy.utils.unregister_class(regClass)

@@ -31,7 +31,7 @@ from bpy.props import *
 import vb25.texture
 
 from vb25.utils import *
-from vb25.ui.ui import *
+from vb25.ui import ui
 
 
 TYPE      = 'BRDF'
@@ -313,7 +313,7 @@ def write(bus, VRayBRDF = None, base_name = None):
 
 
 def gui(context, layout, BRDFHair3, material = None):
-	wide_ui = context.region.width > narrowui
+	wide_ui = context.region.width > ui.narrowui
 
 	split = layout.split()
 	col = split.column()

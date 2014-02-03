@@ -33,16 +33,6 @@ from vb25.utils import *
 from vb25.ui.ui import *
 from vb25.plugins import *
 
-from bl_ui import properties_scene
-for member in dir(properties_scene):
-	subclass = getattr(properties_scene, member)
-	try:
-		subclass.COMPAT_ENGINES.add('VRAY_RENDER')
-		subclass.COMPAT_ENGINES.add('VRAY_RENDER_PREVIEW')
-	except:
-		pass
-del properties_scene
-
 
 class VRAY_RP_Layers(VRayRenderLayersPanel, bpy.types.Panel):
 	bl_label   = "Render Elements"
@@ -251,3 +241,42 @@ class VRAY_SP_lights_tweaker(VRayScenePanel, bpy.types.Panel):
 				sub_v.prop(VRayLamp, 'subdivs',   text="")
 		else:
 			col.label(text="Nothing in bpy.data.lamps...")
+
+
+def GetRegClasses():
+	return (
+		VRAY_RP_Layers,
+		VRAY_SP_includer,
+		VRAY_SP_tools,
+		VRAY_SP_lights_tweaker,
+	)
+
+
+def register():
+	from bl_ui import properties_scene
+	for member in dir(properties_scene):
+		subclass = getattr(properties_scene, member)
+		try:
+			subclass.COMPAT_ENGINES.add('VRAY_RENDER')
+			subclass.COMPAT_ENGINES.add('VRAY_RENDER_PREVIEW')
+		except:
+			pass
+	del properties_scene
+
+	for regClass in GetRegClasses():
+		bpy.utils.register_class(regClass)
+
+
+def unregister():
+	from bl_ui import properties_scene
+	for member in dir(properties_scene):
+		subclass = getattr(properties_scene, member)
+		try:
+			subclass.COMPAT_ENGINES.remove('VRAY_RENDER')
+			subclass.COMPAT_ENGINES.remove('VRAY_RENDER_PREVIEW')
+		except:
+			pass
+	del properties_scene
+
+	for regClass in GetRegClasses():
+		bpy.utils.unregister_class(regClass)

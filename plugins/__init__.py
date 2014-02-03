@@ -36,7 +36,7 @@ from bpy.props import *
 
 ''' vb modules '''
 from vb25.utils import *
-
+from vb25       import dbg
 
 PLUGINS= {
 	'BRDF':          {},
@@ -1758,6 +1758,52 @@ def add_properties():
 		)
 	bpy.utils.register_class(VRayScene)
 
+	class VRayFur(bpy.types.PropertyGroup):
+		width= bpy.props.FloatProperty(
+			name= "Width",
+			description= "Hair thin",
+			min= 0.0,
+			max= 100.0,
+			soft_min= 0.0,
+			soft_max= 0.01,
+			precision= 5,
+			default= 0.0001
+		)
+
+		make_thinner= bpy.props.BoolProperty(
+			name= "Make thinner",
+			description= "Make hair thiner to the end [experimental]",
+			default= False
+		)
+
+		thin_start= bpy.props.IntProperty(
+			name= "Thin start segment",
+			description= "Make hair thiner to the end",
+			subtype= 'PERCENTAGE',
+			min= 0,
+			max= 100,
+			soft_min= 0,
+			soft_max= 100,
+			default= 70
+		)
+	bpy.utils.register_class(VRayFur)
+
+	class VRayParticleSettings(bpy.types.PropertyGroup):
+		pass
+	bpy.utils.register_class(VRayParticleSettings)
+
+	VRayParticleSettings.VRayFur= bpy.props.PointerProperty(
+		name= "V-Ray Fur Settings",
+		type=  VRayFur,
+		description= "V-Ray Fur settings"
+	)
+
+	bpy.types.ParticleSettings.vray= bpy.props.PointerProperty(
+		name= "V-Ray Particle Settings",
+		type=  VRayParticleSettings,
+		description= "V-Ray Particle settings"
+	)
+
 	bpy.types.Texture.vray= PointerProperty(
 		name= "V-Ray Texture Settings",
 		type=  VRayTexture,
@@ -1820,7 +1866,8 @@ def add_properties():
 
 	for pluginType in PLUGINS:
 		for plugin in PLUGINS[pluginType]:
-			if 'register' in dir(PLUGINS[pluginType][plugin]):
+			if hasattr(PLUGINS[pluginType][plugin], 'register'):
+				dbg.msg("%s.register()" % PLUGINS[pluginType][plugin].__name__)
 				PLUGINS[pluginType][plugin].register()
 
 	'''
@@ -1858,6 +1905,12 @@ def add_properties():
 
 
 def remove_properties():
+	for pluginType in PLUGINS:
+		for plugin in PLUGINS[pluginType]:
+			if hasattr(PLUGINS[pluginType][plugin], 'unregister'):
+				dbg.msg("%s.unregister()" % PLUGINS[pluginType][plugin].__name__)
+				PLUGINS[pluginType][plugin].unregister()
+
 	del bpy.types.Camera.vray
 	del bpy.types.Lamp.vray
 	del bpy.types.Material.vray
@@ -1865,8 +1918,3 @@ def remove_properties():
 	del bpy.types.Object.vray
 	del bpy.types.Scene.vray
 	del bpy.types.Texture.vray
-
-	for pluginType in PLUGINS:
-		for plugin in PLUGINS[pluginType]:
-			if 'unregister' in dir(PLUGINS[pluginType][plugin]):
-				PLUGINS[pluginType][plugin].unregister()

@@ -32,66 +32,6 @@ import bpy
 from vb25.ui.ui import *
 
 
-# TODO: Move to plugin
-class VRayFur(bpy.types.PropertyGroup):
-	width= bpy.props.FloatProperty(
-		name= "Width",
-		description= "Hair thin",
-		min= 0.0,
-		max= 100.0,
-		soft_min= 0.0,
-		soft_max= 0.01,
-		precision= 5,
-		default= 0.0001
-	)
-
-	make_thinner= bpy.props.BoolProperty(
-		name= "Make thinner",
-		description= "Make hair thiner to the end [experimental]",
-		default= False
-	)
-
-	thin_start= bpy.props.IntProperty(
-		name= "Thin start segment",
-		description= "Make hair thiner to the end",
-		subtype= 'PERCENTAGE',
-		min= 0,
-		max= 100,
-		soft_min= 0,
-		soft_max= 100,
-		default= 70
-	)
-
-class VRayParticleSettings(bpy.types.PropertyGroup):
-	pass
-
-bpy.utils.register_class(VRayFur)
-bpy.utils.register_class(VRayParticleSettings)
-
-bpy.types.ParticleSettings.vray= bpy.props.PointerProperty(
-	name= "V-Ray Particle Settings",
-	type=  VRayParticleSettings,
-	description= "V-Ray Particle settings"
-)
-
-VRayParticleSettings.VRayFur= bpy.props.PointerProperty(
-	name= "V-Ray Fur Settings",
-	type=  VRayFur,
-	description= "V-Ray Fur settings"
-)
-
-
-from bl_ui import properties_particle
-for member in dir(properties_particle):
-	subclass= getattr(properties_particle, member)
-	try:
-		subclass.COMPAT_ENGINES.add('VRAY_RENDER')
-		subclass.COMPAT_ENGINES.add('VRAY_RENDER_PREVIEW')
-	except:
-		pass
-del properties_particle
-
-
 class VRAY_PP_hair(VRayParticlePanel, bpy.types.Panel):
 	bl_label       = "Fur"
 	bl_options     = {'DEFAULT_CLOSED'}
@@ -120,3 +60,39 @@ class VRAY_PP_hair(VRayParticlePanel, bpy.types.Panel):
 		# 	col.prop(VRayFur, 'thin_start', text= "Segment", slider= True)
 
 
+def GetRegClasses():
+	return (
+		VRAY_PP_hair,
+	)
+
+
+def register():
+	from bl_ui import properties_particle
+	for member in dir(properties_particle):
+		subclass= getattr(properties_particle, member)
+		try:
+			subclass.COMPAT_ENGINES.add('VRAY_RENDER')
+			subclass.COMPAT_ENGINES.add('VRAY_RENDER_PREVIEW')
+		except:
+			pass
+	del properties_particle
+
+	for regClass in GetRegClasses():
+		bpy.utils.register_class(regClass)
+
+
+def unregister():
+	from bl_ui import properties_particle
+	for member in dir(properties_particle):
+		subclass= getattr(properties_particle, member)
+		try:
+			subclass.COMPAT_ENGINES.remove('VRAY_RENDER')
+			subclass.COMPAT_ENGINES.remove('VRAY_RENDER_PREVIEW')
+		except:
+			pass
+	del properties_particle
+
+	for regClass in GetRegClasses():
+		bpy.utils.unregister_class(regClass)
+
+	del bpy.types.ParticleSettings.vray

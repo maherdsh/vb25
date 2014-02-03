@@ -30,7 +30,7 @@ from bpy.props import *
 
 ''' vb modules '''
 from vb25.utils import *
-from vb25.ui.ui import *
+from vb25.ui import ui
 
 
 TYPE= 'BRDF'
@@ -619,7 +619,7 @@ def write(bus, VRayBRDF= None, base_name= None):
   GUI
 '''
 def influence(context, layout, slot):
-	wide_ui= context.region.width > narrowui
+	wide_ui= context.region.width > ui.narrowui
 
 	VRaySlot= slot.texture.vray_slot
 
@@ -628,15 +628,15 @@ def influence(context, layout, slot):
 	col.label(text="Diffuse:")
 	split= layout.split()
 	col= split.column()
-	factor_but(col, VRaySlot, 'map_base',  'base_mult',  "Base")
+	ui.factor_but(col, VRaySlot, 'map_base',  'base_mult',  "Base")
 	if wide_ui:
 		col= split.column()
-	factor_but(col, VRaySlot, 'map_coat',  'coat_mult',  "Coat")
-	factor_but(col, VRaySlot, 'map_flake', 'flake_mult', "Flake")
+	ui.factor_but(col, VRaySlot, 'map_coat',  'coat_mult',  "Coat")
+	ui.factor_but(col, VRaySlot, 'map_flake', 'flake_mult', "Flake")
 
 
 def gui(context, layout, BRDFCarPaint, material= None):
-	wide_ui= context.region.width > narrowui
+	wide_ui= context.region.width > ui.narrowui
 
 	layout.label(text="Coat:")
 	split= layout.split()

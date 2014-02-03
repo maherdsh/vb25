@@ -255,3 +255,22 @@ class VRayListMaterialSlots(bpy.types.UIList):
 		else:
 			split.label(text="")
 			split.prop(slot, 'link', text="", emboss=False, translate=False)
+
+
+def GetRegClasses():
+	return (
+		VRayListUse,
+		VRayList,
+		VRayListDR,
+		VRayListMaterialSlots,
+	)
+
+
+def register():
+	for regClass in GetRegClasses():
+		bpy.utils.register_class(regClass)
+
+
+def unregister():
+	for regClass in GetRegClasses():
+		bpy.utils.unregister_class(regClass)

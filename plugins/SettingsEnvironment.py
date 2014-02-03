@@ -30,7 +30,7 @@ import bpy
 from bpy.props import *
 
 ''' vb modules '''
-from vb25.ui.ui   import *
+from vb25.ui      import ui
 from vb25.plugins import *
 from vb25.utils   import *
 from vb25.shaders import *
@@ -1154,15 +1154,15 @@ def influence(context, layout, slot):
 	# 	col.label(text="Volume:")
 	# 	split= layout.split()
 	# 	col= split.column()
-	# 	factor_but(col, VRaySlot, 'map_color_tex',    'color_tex_mult',    "Color")
-	# 	factor_but(col, VRaySlot, 'map_density_tex',  'density_tex_mult',  "Density")
+	# 	ui.factor_but(col, VRaySlot, 'map_color_tex',    'color_tex_mult',    "Color")
+	# 	ui.factor_but(col, VRaySlot, 'map_density_tex',  'density_tex_mult',  "Density")
 	# 	if wide_ui:
 	# 		col= split.column()
-	# 	factor_but(col, VRaySlot, 'map_emission_tex', 'emission_tex_mult', "Emission")
+	# 	ui.factor_but(col, VRaySlot, 'map_emission_tex', 'emission_tex_mult', "Emission")
 
 
 def draw_EnvironmentFog(context, layout, rna_pointer):
-	wide_ui= context.region.width > narrowui
+	wide_ui= context.region.width > ui.narrowui
 
 	EnvironmentFog= rna_pointer.EnvironmentFog
 
@@ -1252,7 +1252,7 @@ def draw_EnvironmentFog(context, layout, rna_pointer):
 
 
 def draw_VolumeVRayToon(context, layout, rna_pointer):
-	wide_ui= context.region.width > narrowui
+	wide_ui= context.region.width > ui.narrowui
 
 	VolumeVRayToon= rna_pointer.VolumeVRayToon
 
@@ -1293,7 +1293,7 @@ def draw_VolumeVRayToon(context, layout, rna_pointer):
 						text="Groups")
 
 def draw_SphereFade(context, layout, rna_pointer):
-	wide_ui= context.region.width > narrowui
+	wide_ui= context.region.width > ui.narrowui
 
 	SphereFade= rna_pointer.SphereFade
 
@@ -1313,7 +1313,7 @@ def draw_SphereFade(context, layout, rna_pointer):
 	
 
 def gui(context, layout, VRayEffects):
-	wide_ui= context.region.width > narrowui
+	wide_ui= context.region.width > ui.narrowui
 
 	split= layout.split()
 	row= split.row()

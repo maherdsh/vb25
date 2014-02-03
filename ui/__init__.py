@@ -24,14 +24,60 @@
 
 '''
 
-from vb25.ui import properties_data_geometry
-from vb25.ui import properties_data_camera
-from vb25.ui import properties_data_lamp
-from vb25.ui import properties_data_empty
-from vb25.ui import properties_material
-from vb25.ui import properties_object
-from vb25.ui import properties_particles
-from vb25.ui import properties_render
-from vb25.ui import properties_scene
-from vb25.ui import properties_texture
-from vb25.ui import properties_world
+__all__ = [ 'ui' ]
+
+
+def register():
+    from vb25.ui import ui
+    from vb25.ui import properties_data_geometry
+    from vb25.ui import properties_data_camera
+    from vb25.ui import properties_data_lamp
+    from vb25.ui import properties_data_empty
+    from vb25.ui import properties_material
+    from vb25.ui import properties_object
+    from vb25.ui import properties_particles
+    from vb25.ui import properties_render
+    from vb25.ui import properties_scene
+    from vb25.ui import properties_texture
+    from vb25.ui import properties_world
+
+    ui.register()
+    properties_data_geometry.register()
+    properties_data_camera.register()
+    properties_data_lamp.register()
+    properties_data_empty.register()
+    properties_material.register()
+    properties_object.register()
+    properties_particles.register()
+    properties_render.register()
+    properties_scene.register()
+    properties_texture.register()
+    properties_world.register()
+
+
+def unregister():
+    from vb25.ui import ui
+    from vb25.ui import properties_data_geometry
+    from vb25.ui import properties_data_camera
+    from vb25.ui import properties_data_lamp
+    from vb25.ui import properties_data_empty
+    from vb25.ui import properties_material
+    from vb25.ui import properties_object
+    from vb25.ui import properties_particles
+    from vb25.ui import properties_render
+    from vb25.ui import properties_scene
+    from vb25.ui import properties_texture
+    from vb25.ui import properties_world
+
+    ui.unregister()
+    properties_data_geometry.unregister()
+    properties_data_camera.unregister()
+    properties_data_lamp.unregister()
+    properties_data_empty.unregister()
+    properties_material.unregister()
+    properties_object.unregister()
+    properties_particles.unregister()
+    properties_render.unregister()
+    properties_scene.unregister()
+    properties_texture.unregister()
+    properties_world.unregister()

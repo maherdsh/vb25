@@ -31,7 +31,7 @@ from bpy.props import *
 
 ''' vb modules '''
 from vb25.utils import *
-from vb25.ui.ui import *
+from vb25.ui import ui
 
 
 TYPE= 'SETTINGS'
@@ -321,7 +321,7 @@ def write(bus):
 '''
   GUI
 '''
-class VRAY_RP_RTEngine(VRayRenderPanel, bpy.types.Panel):
+class VRAY_RP_RTEngine(ui.VRayRenderPanel, bpy.types.Panel):
 	bl_label       = "Realtime engine"
 	COMPAT_ENGINES = {'VRAY_RENDER','VRAY_RENDER_PREVIEW'}
 
@@ -332,10 +332,10 @@ class VRAY_RP_RTEngine(VRayRenderPanel, bpy.types.Panel):
 		if not hasattr(scene.vray, ID):
 			return False
 		use=   scene.vray.RTEngine.enabled
-		return (use and engine_poll(__class__, context))
+		return (use and ui.engine_poll(__class__, context))
 
 	def draw(self, context):
-		wide_ui= context.region.width > narrowui
+		wide_ui= context.region.width > ui.narrowui
 		layout= self.layout
 
 		VRayScene= context.scene.vray
@@ -389,5 +389,17 @@ class VRAY_RP_RTEngine(VRayRenderPanel, bpy.types.Panel):
 		layout.operator('vray.terminate', text="Terminate", icon='CANCEL')
 
 
-bpy.utils.register_class(VRAY_RP_RTEngine)
+def GetRegClasses():
+	return (
+		VRAY_RP_RTEngine,
+	)
 
+
+def register():
+	for regClass in GetRegClasses():
+		bpy.utils.register_class(regClass)
+
+
+def unregister():
+	for regClass in GetRegClasses():
+		bpy.utils.unregister_class(regClass)

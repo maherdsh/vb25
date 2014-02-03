@@ -31,7 +31,7 @@ from bpy.props import *
 
 ''' vb modules '''
 from vb25.utils import *
-from vb25.ui.ui import *
+from vb25.ui import ui
 
 
 TYPE= 'SETTINGS'
@@ -189,7 +189,7 @@ def write(bus):
 '''
   GUI
 '''
-class RENDER_PT_SettingsCaustics(VRayRenderPanel, bpy.types.Panel):
+class RENDER_PT_SettingsCaustics(ui.VRayRenderPanel, bpy.types.Panel):
 	bl_label = NAME
 
 	COMPAT_ENGINES = {'VRAY_RENDER','VRAY_RENDER_PREVIEW'}
@@ -201,10 +201,10 @@ class RENDER_PT_SettingsCaustics(VRayRenderPanel, bpy.types.Panel):
 		if not hasattr(scene.vray, ID):
 			return False
 		show= scene.vray.SettingsCaustics.on
-		return (show and engine_poll(__class__, context))
+		return (show and ui.engine_poll(__class__, context))
 	
 	def draw(self, context):
-		wide_ui= context.region.width > narrowui
+		wide_ui= context.region.width > ui.narrowui
 		layout= self.layout
 
 		vsce= context.scene.vray
@@ -237,8 +237,18 @@ class RENDER_PT_SettingsCaustics(VRayRenderPanel, bpy.types.Panel):
 			colR.active= vmodule.auto_save
 			colR.prop(vmodule,"auto_save_file", text="")
 
-		
-		
-		
-bpy.utils.register_class(RENDER_PT_SettingsCaustics)
 
+def GetRegClasses():
+	return (
+		RENDER_PT_SettingsCaustics,
+	)
+
+
+def register():
+	for regClass in GetRegClasses():
+		bpy.utils.register_class(regClass)
+
+
+def unregister():
+	for regClass in GetRegClasses():
+		bpy.utils.unregister_class(regClass)

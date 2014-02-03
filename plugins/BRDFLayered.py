@@ -32,7 +32,7 @@ from bpy.props import *
 import vb25.texture
 
 from vb25.utils import *
-from vb25.ui.ui import *
+from vb25.ui import ui
 from vb25.plugins import *
 
 
@@ -239,12 +239,12 @@ def write(bus, VRayBRDF= None, base_name= None):
   GUI
 '''
 def influence(context, layout, slot):
-	wide_ui= context.region.width > narrowui
+	wide_ui= context.region.width > ui.narrowui
 
 	VRaySlot= slot.texture.vray_slot
 
 def gui(context, layout, BRDFLayered, material= None):
-	wide_ui= context.region.width > narrowui
+	wide_ui= context.region.width > ui.narrowui
 
 	row= layout.row()
 	row.template_list("VRayListUse", "",

@@ -31,7 +31,7 @@ from bpy.props import *
 
 ''' vb modules '''
 from vb25.utils import *
-from vb25.ui.ui import *
+from vb25.ui import ui
 from vb25.lib   import VRaySocket
 from vb25.lib   import AttributeUtils
 
@@ -742,7 +742,7 @@ def write(bus, VRayBRDF= None, base_name= None):
   GUI
 '''
 def influence(context, layout, slot):
-	wide_ui= context.region.width > narrowui
+	wide_ui= context.region.width > ui.narrowui
 
 	VRaySlot= slot.texture.vray_slot
 
@@ -751,41 +751,41 @@ def influence(context, layout, slot):
 	col.label(text="Diffuse:")
 	split= layout.split()
 	col= split.column()
-	factor_but(col, VRaySlot, 'map_diffuse',             'diffuse_mult',             "Diffuse")
-	factor_but(col, VRaySlot, 'map_roughness',           'roughness_mult',           "Roughness")
+	ui.factor_but(col, VRaySlot, 'map_diffuse',             'diffuse_mult',             "Diffuse")
+	ui.factor_but(col, VRaySlot, 'map_roughness',           'roughness_mult',           "Roughness")
 	if wide_ui:
 		col= split.column()
-	factor_but(col, VRaySlot, 'map_opacity',             'opacity_mult',             "Opacity")
+	ui.factor_but(col, VRaySlot, 'map_opacity',             'opacity_mult',             "Opacity")
 
 	split= layout.split()
 	col= split.column()
 	col.label(text="Reflection:")
 	split= layout.split()
 	col= split.column()
-	factor_but(col, VRaySlot, 'map_reflect',             'reflect_mult',             "Reflect")
-	factor_but(col, VRaySlot, 'map_reflect_glossiness',  'reflect_glossiness_mult',  "Glossiness")
-	factor_but(col, VRaySlot, 'map_hilight_glossiness',  'hilight_glossiness_mult',  "Hilight")
+	ui.factor_but(col, VRaySlot, 'map_reflect',             'reflect_mult',             "Reflect")
+	ui.factor_but(col, VRaySlot, 'map_reflect_glossiness',  'reflect_glossiness_mult',  "Glossiness")
+	ui.factor_but(col, VRaySlot, 'map_hilight_glossiness',  'hilight_glossiness_mult',  "Hilight")
 	if wide_ui:
 		col= split.column()
-	factor_but(col, VRaySlot, 'map_anisotropy',          'anisotropy_mult',          "Anisotropy")
-	factor_but(col, VRaySlot, 'map_anisotropy_rotation', 'anisotropy_rotation_mult', "Rotation")
-	factor_but(col, VRaySlot, 'map_fresnel_ior',         'fresnel_ior_mult',         "Fresnel")
+	ui.factor_but(col, VRaySlot, 'map_anisotropy',          'anisotropy_mult',          "Anisotropy")
+	ui.factor_but(col, VRaySlot, 'map_anisotropy_rotation', 'anisotropy_rotation_mult', "Rotation")
+	ui.factor_but(col, VRaySlot, 'map_fresnel_ior',         'fresnel_ior_mult',         "Fresnel")
 
 	split= layout.split()
 	col= split.column()
 	col.label(text="Refraction:")
 	split= layout.split()
 	col= split.column()
-	factor_but(col, VRaySlot, 'map_refract',            'refract_mult',            "Refract")
-	factor_but(col, VRaySlot, 'map_refract_glossiness', 'refract_glossiness_mult', "Glossiness")
+	ui.factor_but(col, VRaySlot, 'map_refract',            'refract_mult',            "Refract")
+	ui.factor_but(col, VRaySlot, 'map_refract_glossiness', 'refract_glossiness_mult', "Glossiness")
 	if wide_ui:
 		col= split.column()
-	factor_but(col, VRaySlot, 'map_refract_ior',        'refract_ior_mult',        "IOR")
-	factor_but(col, VRaySlot, 'map_translucency_color', 'translucency_color_mult', "Translucency")
+	ui.factor_but(col, VRaySlot, 'map_refract_ior',        'refract_ior_mult',        "IOR")
+	ui.factor_but(col, VRaySlot, 'map_translucency_color', 'translucency_color_mult', "Translucency")
 
 
 def gui_options(context, layout, BRDFVRayMtl, material= None):
-	wide_ui= context.region.width > narrowui
+	wide_ui= context.region.width > ui.narrowui
 
 	split= layout.split()
 	col= split.column()
@@ -835,7 +835,7 @@ def gui_options(context, layout, BRDFVRayMtl, material= None):
 
 def gui(context, layout, BRDFVRayMtl, material=None, node=None):
 	contextWidth = node.width if node else context.region.width
-	wide_ui = contextWidth > narrowui
+	wide_ui = contextWidth > ui.narrowui
 
 	row= layout.row()
 	colL= row.column()

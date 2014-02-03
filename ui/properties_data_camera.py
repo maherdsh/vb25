@@ -33,14 +33,6 @@ from vb25.utils import *
 from vb25.ui.ui import *
 
 
-from bl_ui import properties_data_camera
-properties_data_camera.DATA_PT_context_camera.COMPAT_ENGINES.add('VRAY_RENDER')
-properties_data_camera.DATA_PT_context_camera.COMPAT_ENGINES.add('VRAY_RENDER_PREVIEW')
-properties_data_camera.DATA_PT_camera_display.COMPAT_ENGINES.add('VRAY_RENDER')
-properties_data_camera.DATA_PT_camera_display.COMPAT_ENGINES.add('VRAY_RENDER_PREVIEW')
-del properties_data_camera
-
-
 class VRAY_DP_camera(VRayDataPanel, bpy.types.Panel):
 	bl_label = "Parameters"
 
@@ -429,3 +421,39 @@ class VRAY_DP_hide_from_view(VRayDataPanel, bpy.types.Panel):
 			sub.active= not VRayCamera.hf_shadows_auto
 			sub.prop_search(VRayCamera, 'hf_shadows_objects',  context.scene, 'objects')
 			sub.prop_search(VRayCamera, 'hf_shadows_groups',   bpy.data,      'groups')
+
+
+def GetRegClasses():
+	return (
+		VRAY_DP_camera,
+		VRAY_DP_physical_camera,
+		VRAY_DP_camera_stereoscopic,
+		VRAY_DP_hide_from_view,
+	)
+
+
+def register():
+	from bl_ui import properties_data_camera
+	properties_data_camera.DATA_PT_context_camera.COMPAT_ENGINES.add('VRAY_RENDER')
+	properties_data_camera.DATA_PT_context_camera.COMPAT_ENGINES.add('VRAY_RENDER_PREVIEW')
+	properties_data_camera.DATA_PT_camera_display.COMPAT_ENGINES.add('VRAY_RENDER')
+	properties_data_camera.DATA_PT_camera_display.COMPAT_ENGINES.add('VRAY_RENDER_PREVIEW')
+	del properties_data_camera
+
+	for regClass in GetRegClasses():
+		bpy.utils.register_class(regClass)
+
+
+def unregister():
+	from bl_ui import properties_data_camera
+	try:
+		properties_data_camera.DATA_PT_context_camera.COMPAT_ENGINES.remove('VRAY_RENDER')
+		properties_data_camera.DATA_PT_context_camera.COMPAT_ENGINES.remove('VRAY_RENDER_PREVIEW')
+		properties_data_camera.DATA_PT_camera_display.COMPAT_ENGINES.remove('VRAY_RENDER')
+		properties_data_camera.DATA_PT_camera_display.COMPAT_ENGINES.remove('VRAY_RENDER_PREVIEW')
+	except:
+		pass
+	del properties_data_camera
+
+	for regClass in GetRegClasses():
+		bpy.utils.unregister_class(regClass)

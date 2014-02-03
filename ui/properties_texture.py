@@ -369,9 +369,38 @@ class VRAY_TP_bitmap(VRayTexturePanel, bpy.types.Panel):
 		col.prop(BitmapBuffer, 'use_data_window')
 
 
-from bl_ui import properties_texture
-properties_texture.TEXTURE_PT_image.COMPAT_ENGINES.add('VRAY_RENDER')
-properties_texture.TEXTURE_PT_image.COMPAT_ENGINES.add('VRAY_RENDER_PREVIEW')
-properties_texture.TEXTURE_PT_voxeldata.COMPAT_ENGINES.add('VRAY_RENDER')
-properties_texture.TEXTURE_PT_voxeldata.COMPAT_ENGINES.add('VRAY_RENDER_PREVIEW')
-del properties_texture
+def GetRegClasses():
+	return (
+		VRAY_TP_context,
+		VRAY_TP_preview,
+		VRAY_TP_influence,
+		VRAY_TP_displacement,
+		VRAY_TP_bitmap,
+	)
+
+
+def register():
+	from bl_ui import properties_texture
+	properties_texture.TEXTURE_PT_image.COMPAT_ENGINES.add('VRAY_RENDER')
+	properties_texture.TEXTURE_PT_image.COMPAT_ENGINES.add('VRAY_RENDER_PREVIEW')
+	properties_texture.TEXTURE_PT_voxeldata.COMPAT_ENGINES.add('VRAY_RENDER')
+	properties_texture.TEXTURE_PT_voxeldata.COMPAT_ENGINES.add('VRAY_RENDER_PREVIEW')
+	del properties_texture
+
+	for regClass in GetRegClasses():
+		bpy.utils.register_class(regClass)
+
+
+def unregister():
+	from bl_ui import properties_texture
+	try:
+		properties_texture.TEXTURE_PT_image.COMPAT_ENGINES.remove('VRAY_RENDER')
+		properties_texture.TEXTURE_PT_image.COMPAT_ENGINES.remove('VRAY_RENDER_PREVIEW')
+		properties_texture.TEXTURE_PT_voxeldata.COMPAT_ENGINES.remove('VRAY_RENDER')
+		properties_texture.TEXTURE_PT_voxeldata.COMPAT_ENGINES.remove('VRAY_RENDER_PREVIEW')
+	except:
+		pass
+	del properties_texture
+
+	for regClass in GetRegClasses():
+		bpy.utils.unregister_class(regClass)

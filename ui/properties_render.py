@@ -1297,3 +1297,40 @@ class VRAY_RP_about(VRayRenderPanel, bpy.types.Panel):
 		col.label(text="IRC: irc.freenode.net #vrayblender")
 		col.separator()
 		col.label(text="V-Ray(R) is a registered trademark of Chaos Group Ltd.")
+
+
+def GetRegClasses():
+	return (
+		VRAY_MT_preset_IM,
+		VRAY_MT_preset_global,
+		VRAY_MT_preset_gi,
+		VRAY_RP_dimensions,
+		VRAY_RP_output,
+		VRAY_RP_render,
+		VRAY_RP_SettingsOptions,
+		VRAY_RP_exporter,
+		VRAY_RP_cm,
+		VRAY_RP_aa,
+		VRAY_RP_dmc,
+		VRAY_RP_gi,
+		VRAY_RP_GI_sh,
+		VRAY_RP_GI_im,
+		VRAY_RP_GI_bf,
+		VRAY_RP_GI_lc,
+		VRAY_RP_displace,
+		VRAY_RP_dr,
+		VRAY_RP_bake,
+		VRAY_PA_SettingsVFB,
+		VRAY_RP_SettingsSystem,
+		VRAY_RP_about,
+	)
+
+
+def register():
+	for regClass in GetRegClasses():
+		bpy.utils.register_class(regClass)
+
+
+def unregister():
+	for regClass in GetRegClasses():
+		bpy.utils.unregister_class(regClass)

@@ -29,7 +29,7 @@ from bpy.props import *
 
 # V-Ray/Blender modules
 from vb25.utils   import *
-from vb25.ui.ui   import *
+from vb25.ui      import ui
 from vb25.plugins import *
 from vb25.texture import *
 from vb25.uvwgen  import *
@@ -366,17 +366,17 @@ def write(bus):
 #
 # User Interface
 #
-class VRAY_PA_TexPtex(VRayTexturePanel, bpy.types.Panel):
+class VRAY_PA_TexPtex(ui.VRayTexturePanel, bpy.types.Panel):
 	bl_label       = "PTex [in progress...]"
 	COMPAT_ENGINES = {'VRAY_RENDER','VRAY_RENDER_PREVIEW'}
 
 	@classmethod
 	def poll(cls, context):
 		tex = context.texture
-		return tex and tex.type == 'VRAY' and tex.vray.type == ID and engine_poll(cls, context)
+		return tex and tex.type == 'VRAY' and tex.vray.type == ID and ui.engine_poll(cls, context)
 
 	def draw(self, context):
-		wide_ui = context.region.width > narrowui
+		wide_ui = context.region.width > ui.narrowui
 		layout  = self.layout
 
 		tex     = context.texture
@@ -419,4 +419,17 @@ class VRAY_PA_TexPtex(VRayTexturePanel, bpy.types.Panel):
 		col.prop(TexPtex, 'color_offset')
 
 
-bpy.utils.register_class(VRAY_PA_TexPtex)
+def GetRegClasses():
+	return (
+		VRAY_PA_TexPtex,
+	)
+
+
+def register():
+	for regClass in GetRegClasses():
+		bpy.utils.register_class(regClass)
+
+
+def unregister():
+	for regClass in GetRegClasses():
+		bpy.utils.unregister_class(regClass)

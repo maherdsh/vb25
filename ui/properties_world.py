@@ -35,14 +35,6 @@ from vb25.ui.ui import *
 from vb25.plugins import *
 
 
-from bl_ui import properties_world
-try:
-	properties_world.WORLD_PT_context_world.COMPAT_ENGINES.add('VRAY_RENDER')
-except:
-	pass
-del properties_world
-
-
 class VRAY_WP_environment(VRayWorldPanel, bpy.types.Panel):
 	bl_label = "Environment"
 
@@ -153,5 +145,29 @@ class VRAY_WP_effects(VRayWorldPanel, bpy.types.Panel):
 				PLUGINS['SETTINGS']['SettingsEnvironment'].draw_SphereFade(context, box, effect)
 
 
-bpy.utils.register_class(VRAY_WP_environment)
-bpy.utils.register_class(VRAY_WP_effects)
+def GetRegClasses():
+	return (
+		VRAY_WP_environment,
+		VRAY_WP_effects,
+	)
+
+
+def register():
+	from bl_ui import properties_world
+	properties_world.WORLD_PT_context_world.COMPAT_ENGINES.add('VRAY_RENDER')
+	del properties_world
+
+	for regClass in GetRegClasses():
+		bpy.utils.register_class(regClass)
+
+
+def unregister():
+	from bl_ui import properties_world
+	try:
+		properties_world.WORLD_PT_context_world.COMPAT_ENGINES.remove('VRAY_RENDER')
+	except:
+		pass
+	del properties_world
+
+	for regClass in GetRegClasses():
+		bpy.utils.unregister_class(regClass)

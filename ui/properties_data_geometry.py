@@ -32,17 +32,6 @@ import bpy
 from vb25.ui.ui import *
 
 
-from bl_ui import properties_data_mesh
-for member in dir(properties_data_mesh):
-	subclass= getattr(properties_data_mesh, member)
-	try:
-		subclass.COMPAT_ENGINES.add('VRAY_RENDER')
-		subclass.COMPAT_ENGINES.add('VRAY_RENDER_PREVIEW')
-	except:
-		pass
-del properties_data_mesh
-
-
 class VRAY_DP_override(VRayDataPanel, bpy.types.Panel):
 	bl_label   = "Options"
 	bl_options = {'DEFAULT_CLOSED'}
@@ -137,3 +126,40 @@ class VRAY_DP_tools(VRayDataPanel, bpy.types.Panel):
 		split= layout.split()
 		col= split.column()
 		col.operator('vray.create_proxy', icon='OUTLINER_OB_MESH')
+
+
+def GetRegClasses():
+	return (
+		VRAY_DP_override,
+		VRAY_DP_tools,
+	)
+
+
+def register():
+	from bl_ui import properties_data_mesh
+	for member in dir(properties_data_mesh):
+		subclass= getattr(properties_data_mesh, member)
+		try:
+			subclass.COMPAT_ENGINES.add('VRAY_RENDER')
+			subclass.COMPAT_ENGINES.add('VRAY_RENDER_PREVIEW')
+		except:
+			pass
+	del properties_data_mesh
+
+	for regClass in GetRegClasses():
+		bpy.utils.register_class(regClass)
+
+
+def unregister():
+	from bl_ui import properties_data_mesh
+	for member in dir(properties_data_mesh):
+		subclass= getattr(properties_data_mesh, member)
+		try:
+			subclass.COMPAT_ENGINES.remove('VRAY_RENDER')
+			subclass.COMPAT_ENGINES.remove('VRAY_RENDER_PREVIEW')
+		except:
+			pass
+	del properties_data_mesh
+
+	for regClass in GetRegClasses():
+		bpy.utils.unregister_class(regClass)

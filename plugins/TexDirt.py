@@ -29,7 +29,7 @@ from bpy.props import *
 # V-Ray/Blender modules
 from vb25.utils import *
 from vb25.shaders import *
-from vb25.ui.ui import *
+from vb25.ui import ui
 
 
 TYPE = 'TEXTURE'
@@ -355,7 +355,7 @@ def write(bus):
 '''
   GUI
 '''
-class TEXTURE_PT_TexDirt(VRayTexturePanel, bpy.types.Panel):
+class TEXTURE_PT_TexDirt(ui.VRayTexturePanel, bpy.types.Panel):
     bl_label = NAME
 
     COMPAT_ENGINES = {'VRAY_RENDER','VRAY_RENDER_PREVIEW'}
@@ -367,13 +367,13 @@ class TEXTURE_PT_TexDirt(VRayTexturePanel, bpy.types.Panel):
             return False
         VRayTexture = tex.vray
         engine = context.scene.render.engine
-        return ((tex and tex.type == 'VRAY' and VRayTexture.type == ID) and (engine_poll(__class__, context)))
+        return ((tex and tex.type == 'VRAY' and VRayTexture.type == ID) and (ui.engine_poll(__class__, context)))
     
     def draw(self, context):
         tex  = context.texture
         TexDirt = getattr(tex.vray, PLUG)
         
-        wide_ui = context.region.width > narrowui
+        wide_ui = context.region.width > ui.narrowui
 
         layout = self.layout
 
@@ -449,11 +449,19 @@ class TEXTURE_PT_TexDirt(VRayTexturePanel, bpy.types.Panel):
                         text="Result Affect")
         col.prop(TexDirt, 'affect_result_nodes_inclusive')
 
+
+def GetRegClasses():
+    return (
+        TEXTURE_PT_TexDirt,
+        TexDirt,
+    )
+
+
 def register():
-    bpy.utils.register_class(TEXTURE_PT_TexDirt)
-    bpy.utils.register_class(TexDirt)
+    for regClass in GetRegClasses():
+        bpy.utils.register_class(regClass)
 
 
 def unregister():
-    bpy.utils.unregister_class(TEXTURE_PT_TexDirt)
-    bpy.utils.unregister_class(TexDirt)
+    for regClass in GetRegClasses():
+        bpy.utils.unregister_class(regClass)

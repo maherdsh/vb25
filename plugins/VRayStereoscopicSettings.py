@@ -30,7 +30,7 @@ from bpy.props import *
 
 ''' vb modules '''
 from vb25.utils import *
-from vb25.ui.ui import *
+from vb25.ui import ui
 
 
 TYPE = 'SETTINGS'
@@ -243,7 +243,7 @@ def write(bus):
 		ofile.write("\n}\n")
 
 
-class VRAY_RP_VRayStereoscopicSettings(VRayRenderPanel, bpy.types.Panel):
+class VRAY_RP_VRayStereoscopicSettings(ui.VRayRenderPanel, bpy.types.Panel):
 	bl_label       = "Stereoscopic"
 	COMPAT_ENGINES = {'VRAY_RENDER','VRAY_RENDER_PREVIEW'}
 
@@ -253,7 +253,7 @@ class VRAY_RP_VRayStereoscopicSettings(VRayRenderPanel, bpy.types.Panel):
 		return super().poll(context) and VRayStereoscopicSettings.use
 
 	def draw(self, context):
-		wide_ui= context.region.width > narrowui
+		wide_ui= context.region.width > ui.narrowui
 		layout= self.layout
 
 		VRayScene= context.scene.vray
@@ -284,4 +284,18 @@ class VRAY_RP_VRayStereoscopicSettings(VRayRenderPanel, bpy.types.Panel):
 		#layout.separator()
 		#layout.prop(VRayStereoscopicSettings, 'exclude_list')
 
-bpy.utils.register_class(VRAY_RP_VRayStereoscopicSettings)
+
+def GetRegClasses():
+	return (
+		VRAY_RP_VRayStereoscopicSettings,
+	)
+
+
+def register():
+	for regClass in GetRegClasses():
+		bpy.utils.register_class(regClass)
+
+
+def unregister():
+	for regClass in GetRegClasses():
+		bpy.utils.unregister_class(regClass)

@@ -31,7 +31,7 @@ from bpy.props import *
 
 ''' vb modules '''
 from vb25.utils import *
-from vb25.ui.ui import *
+from vb25.ui import ui
 
 
 TYPE= 'BRDF'
@@ -559,7 +559,7 @@ def write(bus, VRayBRDF= None, base_name= None):
   GUI
 '''
 def gui(context, layout, BRDFBlinn):
-	wide_ui= context.region.width > narrowui
+	wide_ui= context.region.width > ui.narrowui
 
 	split= layout.split()
 	col= split.column(align=True)

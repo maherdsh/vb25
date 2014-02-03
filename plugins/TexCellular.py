@@ -30,7 +30,7 @@ from bpy.props import *
 
 # V-Ray/Blender modules
 from vb25.utils   import *
-from vb25.ui.ui   import *
+from vb25.ui      import ui
 from vb25.plugins import *
 from vb25.texture import *
 from vb25.uvwgen  import *
@@ -311,17 +311,17 @@ def write(bus):
 '''
   GUI
 '''
-class VRAY_TP_TexCellular(VRayTexturePanel, bpy.types.Panel):
+class VRAY_TP_TexCellular(ui.VRayTexturePanel, bpy.types.Panel):
 	bl_label       = NAME
 	COMPAT_ENGINES = {'VRAY_RENDER','VRAY_RENDER_PREVIEW'}
 
 	@classmethod
 	def poll(cls, context):
 		tex = context.texture
-		return tex and tex.type == 'VRAY' and tex.vray.type == ID and engine_poll(cls, context)
+		return tex and tex.type == 'VRAY' and tex.vray.type == ID and ui.engine_poll(cls, context)
 
 	def draw(self, context):
-		wide_ui = context.region.width > narrowui
+		wide_ui = context.region.width > ui.narrowui
 		layout  = self.layout
 
 		tex= context.texture
@@ -374,5 +374,17 @@ class VRAY_TP_TexCellular(VRayTexturePanel, bpy.types.Panel):
 			col.prop(TexCellular, 'fractal_roughness', text="Fractal Roughness")
 
 
-bpy.utils.register_class(VRAY_TP_TexCellular)
+def GetRegClasses():
+	return (
+		VRAY_TP_TexCellular,
+	)
 
+
+def register():
+	for regClass in GetRegClasses():
+		bpy.utils.register_class(regClass)
+
+
+def unregister():
+	for regClass in GetRegClasses():
+		bpy.utils.unregister_class(regClass)

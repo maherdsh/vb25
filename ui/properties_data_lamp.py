@@ -350,3 +350,22 @@ class VRAY_DP_include_exclude(VRayLampPanel, bpy.types.Panel):
 		col.prop_search(VRayLamp, 'include_groups',   bpy.data,      'groups',  text="Groups")
 
 
+def GetRegClasses():
+	return (
+		VRAY_DP_context_lamp,
+		VRAY_DP_light,
+		VRAY_DP_light_shape,
+		VRAY_DP_light_shadows,
+		VRAY_DP_light_advanced,
+		VRAY_DP_include_exclude,
+	)
+
+
+def register():
+	for regClass in GetRegClasses():
+		bpy.utils.register_class(regClass)
+
+
+def unregister():
+	for regClass in GetRegClasses():
+		bpy.utils.unregister_class(regClass)

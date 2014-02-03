@@ -73,3 +73,19 @@ class VRAY_DP_empty(VRayDataPanel, bpy.types.Panel):
                 col = split.column()
             col.prop(VRayObject, 'sceneAddCameras')
             col.prop(VRayObject, 'sceneAddEnvironment')
+
+
+def GetRegClasses():
+    return (
+        VRAY_DP_empty,
+    )
+
+
+def register():
+    for regClass in GetRegClasses():
+        bpy.utils.register_class(regClass)
+
+
+def unregister():
+    for regClass in GetRegClasses():
+        bpy.utils.unregister_class(regClass)

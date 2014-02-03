@@ -495,3 +495,28 @@ class VRAY_MP_render(VRayMaterialPanel, bpy.types.Panel):
 			sub.active= MtlRenderStats.visibility
 		sub.prop(MtlRenderStats, 'reflections_visibility', text="Reflections")
 		sub.prop(MtlRenderStats, 'refractions_visibility', text="Refractions")
+
+
+def GetRegClasses():
+	return (
+		VRAY_MT_preview,
+		VRAY_MT_preset_material,
+		VRAY_MP_context_material,
+		VRAY_MP_basic,
+		VRAY_MP_options,
+		VRAY_MP_two_sided,
+		VRAY_MP_override,
+		VRAY_MP_wrapper,
+		VRAY_MP_outline,
+		VRAY_MP_render,
+	)
+
+
+def register():
+	for regClass in GetRegClasses():
+		bpy.utils.register_class(regClass)
+
+
+def unregister():
+	for regClass in GetRegClasses():
+		bpy.utils.unregister_class(regClass)

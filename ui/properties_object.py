@@ -488,3 +488,23 @@ class VRAY_OBP_VRayPattern(VRayObjectPanel, bpy.types.Panel):
 		col.prop(GeomVRayPattern, 'render_pattern_object')
 
 
+def GetRegClasses():
+	return (
+		VRAY_OBP_override,
+		VRAY_OBP_wrapper,
+		VRAY_OBP_render,
+		VRAY_OBP_displacement,
+		VRAY_OBP_lightmesh,
+		VRAY_OBP_subdivision,
+		VRAY_OBP_VRayPattern,
+	)
+
+
+def register():
+	for regClass in GetRegClasses():
+		bpy.utils.register_class(regClass)
+
+
+def unregister():
+	for regClass in GetRegClasses():
+		bpy.utils.unregister_class(regClass)
