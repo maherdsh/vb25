@@ -38,6 +38,8 @@ from bpy.props import *
 from vb25.utils import *
 from vb25       import dbg
 
+
+PLUGINS_DIRS = []
 PLUGINS= {
 	'BRDF':          {},
 	'CAMERA':        {},
@@ -102,6 +104,7 @@ if base_dir is not None:
 	plugins_dir= os.path.join(base_dir,"plugins")
 
 	if not plugins_dir in sys.path:
+		PLUGINS_DIRS.append(plugins_dir)
 		sys.path.append(plugins_dir)
 
 	plugins_files= [fname[:-3] for fname in os.listdir(plugins_dir) if fname and fname.endswith(".py") and not fname == "__init__.py"]
@@ -1905,6 +1908,9 @@ def add_properties():
 
 
 def remove_properties():
+	for plugDir in PLUGINS_DIRS:
+		sys.path.remove(plugDir)
+
 	for pluginType in PLUGINS:
 		for plugin in PLUGINS[pluginType]:
 			if hasattr(PLUGINS[pluginType][plugin], 'unregister'):
