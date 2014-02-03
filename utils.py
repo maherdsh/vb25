@@ -1132,22 +1132,24 @@ def init_files(bus):
 	export_filename = "scene"
 	output_filepath = default_dir
 
-	if bpy.data.filepath:
-		if SettingsOutput.img_dir:
-			output_filepath = bpy.path.abspath(SettingsOutput.img_dir)
-			if '%C' in output_filepath: output_filepath = output_filepath.replace('%C', scene.camera.name)
-			if '%S' in output_filepath: output_filepath = output_filepath.replace('%S', scene.name)
-			if '%F' in output_filepath: output_filepath = output_filepath.replace('%F', clean_string(blendfile_name))
+	if SettingsOutput.img_dir:
+		img_dir = SettingsOutput.img_dir
+		if img_dir.startswith("//") and not bpy.data.filepath:
+			img_dir = default_dir
+		output_filepath = bpy.path.abspath(img_dir)
+		if '%C' in output_filepath: output_filepath = output_filepath.replace('%C', scene.camera.name)
+		if '%S' in output_filepath: output_filepath = output_filepath.replace('%S', scene.name)
+		if '%F' in output_filepath: output_filepath = output_filepath.replace('%F', clean_string(blendfile_name))
 
-		if VRayExporter.output == 'USER':
-			if VRayExporter.output_dir:
-				export_filepath= bpy.path.abspath(VRayExporter.output_dir)
+	if VRayExporter.output == 'USER':
+		if VRayExporter.output_dir:
+			export_filepath= bpy.path.abspath(VRayExporter.output_dir)
 
-		elif VRayExporter.output == 'SCENE':
-			export_filepath= os.path.join(blendfile_path, "vrscene")
+	elif VRayExporter.output == 'SCENE' and bpy.data.filepath:
+		export_filepath= os.path.join(blendfile_path, "vrscene")
 
-		if VRayExporter.output_unique:
-			export_filename = blendfile_name
+	if VRayExporter.output_unique:
+		export_filename = blendfile_name
 
 	if VRayExporter.output == 'USER':
 		export_filepath = bpy.path.abspath(VRayExporter.output_dir)
