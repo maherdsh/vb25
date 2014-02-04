@@ -1077,11 +1077,13 @@ def write(bus):
 			ofile.write("\n}\n")
 
 		else:
+			lc_auto_save_path = get_path(SettingsLightCache.auto_save_file)
 			if SettingsLightCache.auto_save:
-				create_dir_from_filepath(bpy.path.abspath(SettingsLightCache.auto_save_file))
+				create_dir_from_filepath(lc_auto_save_path)
 
+			im_auto_save_path = get_path(SettingsIrradianceMap.auto_save_file)
 			if SettingsIrradianceMap.auto_save:
-				create_dir_from_filepath(bpy.path.abspath(SettingsIrradianceMap.auto_save_file))
+				create_dir_from_filepath(im_auto_save_path)
 
 			ofile.write("\nSettingsGI SettingsGI {")
 			ofile.write("\n\ton= 1;")
@@ -1126,7 +1128,7 @@ def write(bus):
 			ofile.write("\n\trandomize_samples= %i;" % SettingsIrradianceMap.randomize_samples)
 			ofile.write("\n\tmode= %d;" % IM_MODE[SettingsIrradianceMap.mode])
 			ofile.write("\n\tauto_save= %d;" % SettingsIrradianceMap.auto_save)
-			ofile.write("\n\tauto_save_file= \"%s\";" % bpy.path.abspath(SettingsIrradianceMap.auto_save_file))
+			ofile.write("\n\tauto_save_file= \"%s\";" % im_auto_save_path)
 			ofile.write("\n\tfile= \"%s\";" % get_full_filepath(bus, None, SettingsIrradianceMap.file))
 			ofile.write("\n\tmultiple_views= %d;" % SettingsIrradianceMap.multiple_views)
 			ofile.write("\n\tdont_delete= false;")
@@ -1157,7 +1159,7 @@ def write(bus):
 			ofile.write("\n\tadaptive_sampling= %i;" % SettingsLightCache.adaptive_sampling)
 			ofile.write("\n\tmode= %d;" % LC_MODE[SettingsLightCache.mode])
 			ofile.write("\n\tauto_save= %d;" % SettingsLightCache.auto_save)
-			ofile.write("\n\tauto_save_file= \"%s\";" % bpy.path.abspath(SettingsLightCache.auto_save_file))
+			ofile.write("\n\tauto_save_file= \"%s\";" % lc_auto_save_path)
 			ofile.write("\n\tfile= \"%s\";" % get_full_filepath(bus, None, SettingsLightCache.file))
 			ofile.write("\n\tdont_delete= false;")
 			ofile.write("\n\tmultiple_views= %d;" % SettingsLightCache.multiple_views)
