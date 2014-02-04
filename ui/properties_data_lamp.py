@@ -350,7 +350,8 @@ class VRAY_DP_include_exclude(VRayLampPanel, bpy.types.Panel):
 		split.active = VRayLamp.use_include
 		col= split.column()
 		col.prop_search(VRayLamp, 'include_objects',  context.scene, 'objects', text="")
-		col= split.column()
+		if wide_ui:
+			col= split.column()
 		col.prop_search(VRayLamp, 'include_groups',   bpy.data,      'groups',  text="")
 
 		layout.prop(VRayLamp, 'use_exclude')
@@ -358,7 +359,8 @@ class VRAY_DP_include_exclude(VRayLampPanel, bpy.types.Panel):
 		split.active = VRayLamp.use_exclude
 		col= split.column()
 		col.prop_search(VRayLamp, 'exclude_objects',  context.scene, 'objects', text="")
-		col= split.column()
+		if wide_ui:
+			col= split.column()
 		col.prop_search(VRayLamp, 'exclude_groups',   bpy.data,      'groups',  text="")
 
 
