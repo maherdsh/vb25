@@ -852,6 +852,10 @@ def path_sep_to_unix(filepath):
 	return filepath
 
 
+def get_path(filepath):
+	return os.path.normpath(path_sep_to_unix(bpy.path.abspath(filepath)))
+
+
 def Quotes(path):
 	if PLATFORM != 'win32':
 		return '"%s"' % (path)
