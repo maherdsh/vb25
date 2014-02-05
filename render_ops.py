@@ -46,6 +46,7 @@ import vb25.proxy
 
 from vb25.lib     import VRaySocket
 from vb25.lib     import VRayProxy
+from vb25.lib     import GetMaterialsNames
 from vb25.utils   import *
 from vb25.plugins import *
 
@@ -1234,9 +1235,74 @@ class VRayRendererPreview(bpy.types.RenderEngine):
 				self.report({'ERROR'}, err)
 
 
+class VRayMaterialNameMenu(bpy.types.Menu):
+	bl_label = "Simple Custom Menu"
+	bl_idname = "OBJECT_MT_simple_custom_menu"
+
+	ma_list = []
+
+	def draw(self, context):
+		row = self.layout.row()
+		sub = row.column()
+		
+		for i,maName in enumerate(self.ma_list):
+			if i and i % 15 == 0:
+				sub = row.column()
+			sub.operator("vray.set_vrscene_material_name", text=maName).name = maName
+
+
+class VRaySetMaterialName(bpy.types.Operator):
+	bl_idname      = "vray.set_vrscene_material_name"
+	bl_label       = "Set Material Name"
+	bl_description = "Set material name from *.vrscene file"
+
+	name = bpy.props.StringProperty()
+
+	def execute(self, context):
+		ma = context.material
+
+		VRayMaterial = ma.vray
+		if not VRayMaterial.type == 'MtlVRmat':
+			return {'CANCELLED'}
+
+		MtlVRmat = VRayMaterial.MtlVRmat
+		MtlVRmat.mtlname = self.name
+
+		return {'FINISHED'}
+
+
+class VRayGetMaterialName(bpy.types.Operator):
+	bl_idname      = "vray.get_vrscene_material_name"
+	bl_label       = "Get Material Name"
+	bl_description = "Get material name from *.vrscene file"
+
+	def execute(self, context):
+		ma = context.material
+
+		VRayMaterial = ma.vray
+		if not VRayMaterial.type == 'MtlVRmat':
+			return {'CANCELLED'}
+
+		MtlVRmat = VRayMaterial.MtlVRmat
+		if not MtlVRmat.filename:
+			return {'CANCELLED'}
+
+		filePath = get_path(MtlVRmat.filename)
+		if not os.path.exists(filePath):
+			return {'CANCELLED'}
+
+		VRayMaterialNameMenu.ma_list = GetMaterialsNames(filePath)
+
+		bpy.ops.wm.call_menu(name=VRayMaterialNameMenu.bl_idname)
+
+		return {'FINISHED'}
+
 
 def GetRegClasses():
 	return (
+		VRayMaterialNameMenu,
+		VRayGetMaterialName,
+		VRaySetMaterialName,
 		VRAY_OT_update,
 		VRAY_OT_lens_shift,
 		VRAY_OT_effect_add,
