@@ -697,18 +697,7 @@ def	write_material(bus):
 	if not append_unique(bus['cache']['materials'], ma_name):
 		return ma_name
 
-	# Write material BRDF
-	brdf= PLUGINS['BRDF'][VRayMaterial.type].write(bus)
-
-	# print_dict(scene, "Bus", bus)
-
-	# Add normal mapping if needed
-	brdf= PLUGINS['BRDF']['BRDFBump'].write(bus, base_brdf = brdf)
-
-	# Add bump mapping if needed
-	brdf= PLUGINS['BRDF']['BRDFBump'].write(bus, base_brdf = brdf, use_bump = True)
-
-	# Add wrapper / override / etc
+	# Init wrapper / override / etc
 	complex_material= []
 	for component in (VRayMaterial.Mtl2Sided.use,
 					  VRayMaterial.MtlWrapper.use,
@@ -721,10 +710,24 @@ def	write_material(bus):
 	complex_material.append(ma_name)
 	complex_material.reverse()
 
-	ofile.write("\nMtlSingleBRDF %s {"%(complex_material[-1]))
-	ofile.write("\n\tbrdf=%s;" % a(scene, brdf))
-	ofile.write("\n\tallow_negative_colors=1;")
-	ofile.write("\n}\n")
+	if VRayMaterial.type == 'MtlVRmat':
+		PLUGINS['BRDF']['MtlVRmat'].write(bus, name=complex_material[-1])
+	else:
+		# Write material BRDF
+		brdf= PLUGINS['BRDF'][VRayMaterial.type].write(bus)
+
+		# print_dict(scene, "Bus", bus)
+
+		# Add normal mapping if needed
+		brdf= PLUGINS['BRDF']['BRDFBump'].write(bus, base_brdf = brdf)
+
+		# Add bump mapping if needed
+		brdf= PLUGINS['BRDF']['BRDFBump'].write(bus, base_brdf = brdf, use_bump = True)
+
+		ofile.write("\nMtlSingleBRDF %s {"%(complex_material[-1]))
+		ofile.write("\n\tbrdf=%s;" % a(scene, brdf))
+		ofile.write("\n\tallow_negative_colors=1;")
+		ofile.write("\n}\n")
 
 	if VRayMaterial.Mtl2Sided.use:
 		base_material= complex_material.pop()
