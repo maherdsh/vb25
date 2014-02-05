@@ -67,10 +67,15 @@ def mapto(bus, BRDFLayered=None):
 
 
 def gui(context, layout, MtlVRmat, material=None, node=None):
-    split = layout.split()
-    col = split.column()
-    col.prop(MtlVRmat, 'filename')
-    col.prop(MtlVRmat, 'mtlname')
+    split = layout.split(percentage=0.2, align=True)
+    split.column().label("File:")
+    split.column().prop(MtlVRmat, 'filename', text="")
+
+    split = layout.split(percentage=0.2, align=True)
+    split.column().label("Name:")
+    row = split.column().row(align=True)
+    row.prop(MtlVRmat, 'mtlname', text="")
+    row.operator("vray.get_vrscene_material_name", text="", icon='IMASEL')
 
 
 def write(bus, name):
