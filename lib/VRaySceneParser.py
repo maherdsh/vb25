@@ -70,22 +70,28 @@ AColor = Keyword("AColor").suppress()
 
 # Values
 #
-real = Combine(Word(nums+"+-", nums) + dot + Optional( Word(nums) ) + Optional(CaselessLiteral("E") + Word(nums+"+-",nums) ) ).setParseAction(to_float)
+nameType = Word(alphanums+"@_")
+
+real    = Combine(Word(nums+"+-", nums) + dot + Optional(Word(nums)) + Optional(CaselessLiteral("E") + Word(nums+"+-",nums))).setParseAction(to_float)
 integer = Word(nums+"+-", nums).setParseAction(to_int)
-color = Color + lparen + Group(delimitedList(real)).setParseAction(to_vector) + rparen
+
+color  = Color + lparen + Group(delimitedList(real)).setParseAction(to_vector) + rparen
 acolor = AColor + lparen + Group(delimitedList(real)).setParseAction(to_vector) + rparen
+
+output = nameType + Optional(Word("::") + Word(alphas+"_"))
 
 # Plugin Attribute
 #
-attrName  = Word(alphas+"_")
-attrValue = integer ^ real ^ color ^ acolor ^ Word(alphanums) ^ quotedString.setParseAction(no_quotes)
+attrName  = nameType
+attrValue = integer ^ real ^ color ^ acolor ^ nameType ^ output ^ quotedString.setParseAction(no_quotes)
 
 pluginAttr = Group(attrName + equals + attrValue + semi)
 
 # Plugin
 #
-pluginType = Word(alphas)
-pluginName = Word(alphas+"@")
+pluginType = Word(alphanums)
+pluginName = Word(alphanums+"@_")
+
 pluginDesc = Group(pluginType + pluginName + lbrace + Group(ZeroOrMore(pluginAttr)) + rbrace).setParseAction(getPluginDesc)
 pluginDesc.ignore("//"+restOfLine)
 pluginDesc.ignore(cStyleComment)
@@ -96,23 +102,28 @@ sceneDesc = OneOrMore(pluginDesc)
 sceneDesc.ignore("//"+restOfLine)
 sceneDesc.ignore(cStyleComment)
 
+nameParser = ZeroOrMore(Group(pluginType + pluginName + lbrace))
+nameParser.ignore("//"+restOfLine)
+nameParser.ignore(cStyleComment)
+
 
 def ParseVrscene(filepath):
     return sceneDesc.parseString(open(filepath, "r").read())
 
 
 def GetMaterialsNames(filepath):
-    vrscenePlugins = ParseVrscene(filepath)
-
     materialPluginNames = []
-    for plug in vrscenePlugins:
-        if plug['ID'].startswith("Mtl"):
-            if plug['Name'] == 'MANOMATERIALISSET':
-                continue
-            materialPluginNames.append(plug['Name'])
-
+    with open(filepath, "r") as f:
+        for l in f:
+            result = nameParser.parseString(l)
+            if result:
+                res = result[0]
+                if res[0].startswith("Mtl"):
+                    if res[1] == 'MANOMATERIALISSET':
+                        continue
+                    materialPluginNames.append(res[1])
     return materialPluginNames
 
 
 if __name__ == '__main__':
-    print(GetMaterialsNames("/tmp/vrayblender_bdancer/scene_materials.vrscene"))
+    print(GetMaterialsNames("/home/bdancer/devel/vrayblender/test-suite/animation_export_optimization/vrscene/scene_materials.vrscene"))
