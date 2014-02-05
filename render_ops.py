@@ -46,7 +46,7 @@ import vb25.proxy
 
 from vb25.lib     import VRaySocket
 from vb25.lib     import VRayProxy
-from vb25.lib     import GetMaterialsNames
+from vb25.lib     import GetMaterialsNames, GetXMLMaterialsNames
 from vb25.utils   import *
 from vb25.plugins import *
 
@@ -1236,8 +1236,8 @@ class VRayRendererPreview(bpy.types.RenderEngine):
 
 
 class VRayMaterialNameMenu(bpy.types.Menu):
-	bl_label = "Simple Custom Menu"
-	bl_idname = "OBJECT_MT_simple_custom_menu"
+	bl_label = "Select Material Name"
+	bl_idname = "VRayMaterialNameMenu"
 
 	ma_list = []
 
@@ -1291,7 +1291,10 @@ class VRayGetMaterialName(bpy.types.Operator):
 		if not os.path.exists(filePath):
 			return {'CANCELLED'}
 
-		VRayMaterialNameMenu.ma_list = GetMaterialsNames(filePath)
+		if filePath.endswith(".vrscene"):
+			VRayMaterialNameMenu.ma_list = GetMaterialsNames(filePath)
+		else:
+			VRayMaterialNameMenu.ma_list = GetXMLMaterialsNames(filePath)
 
 		bpy.ops.wm.call_menu(name=VRayMaterialNameMenu.bl_idname)
 
