@@ -460,9 +460,9 @@ def add_properties():
 			name= "Shadow radius",
 			description= "Shadow radius",
 			min= 0.0,
-			max= 1.0,
+			max= 100.0,
 			soft_min= 0.0,
-			soft_max= 1.0,
+			soft_max= 10.0,
 			precision= 3,
 			default= 0
 		)
