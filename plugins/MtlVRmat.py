@@ -66,6 +66,9 @@ def mapto(bus, BRDFLayered=None):
     return {}
 
 
+def influence(context, layout, slot):
+    pass
+
 def gui(context, layout, MtlVRmat, material=None, node=None):
     split = layout.split(percentage=0.2, align=True)
     split.column().label("File:")
