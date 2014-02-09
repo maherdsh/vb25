@@ -27,6 +27,7 @@
 
 ''' Blender modules '''
 import bpy
+import mathutils
 from bpy.props import *
 
 ''' vb modules '''
@@ -824,10 +825,12 @@ def write_SphereFadeGizmo(bus, ob):
 	scene= bus['scene']
 	ofile= bus['files']['environment']
 
+	tm = mathutils.Matrix.Translation(ob.matrix_world.translation)
+
 	vray = ob.vray
 	name= "MG%s" % get_name(ob, prefix='EMPTY')
 	ofile.write("\nSphereFadeGizmo %s {" % name)
-	ofile.write("\n\ttransform= %s;" % a(scene, transform(ob.matrix_world)))
+	ofile.write("\n\ttransform= %s;" % a(scene, transform(tm)))
 	if ob.type == 'EMPTY':
 		ofile.write("\n\tradius=%s;" % ob.empty_draw_size)
 	elif vray.MtlRenderStats.use:
