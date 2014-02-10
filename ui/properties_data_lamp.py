@@ -281,6 +281,8 @@ class VRAY_DP_light_shadows(VRayLampPanel, bpy.types.Panel):
 		split= layout.split()
 		col= split.column()
 		col.prop(vl,'shadowColor', text="")
+		if lamp.type == 'SUN' and vl.direct_type == 'DIRECT':
+			col.prop(vl,'shadowShape', text="Shape")
 		if wide_ui:
 			col= split.column()
 		col.prop(vl,'shadowBias', text="Bias")

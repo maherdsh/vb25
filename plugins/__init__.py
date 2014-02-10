@@ -402,6 +402,16 @@ def add_properties():
 			default= 'SPOT'
 		)
 
+		shadowShape = EnumProperty(
+			name = "Shadow Shape",
+			description = "Shadow shape",
+			items = (
+				('0', "Box", ""),
+				('1', "Sphere", ""),
+			),
+			default = '1'
+		)
+
 		shadows= BoolProperty(
 			name= "Shadows",
 			description= "Produce shadows",
