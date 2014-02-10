@@ -246,7 +246,7 @@ def write(bus):
 
 	if not texture.image:
 		ob_prefix = "Object: %s => " % bus['node']['object'].name if 'object' in bus['node'] else ""
-		debug(scene, "Texture: %s => Image file is not set!" % (ob_prefix, texture.name), error= True)
+		debug(scene, "%sTexture: %s => Image file is not set!" % (ob_prefix, texture.name), error= True)
 		return None
 
 	bitmap= write_BitmapBuffer(bus)
