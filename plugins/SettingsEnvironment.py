@@ -119,7 +119,11 @@ PARAMS= {
 
 def add_properties(rna_pointer):
 	class SphereFade(bpy.types.PropertyGroup):
-		pass
+		loc_only = BoolProperty(
+			name        = "Use Location Only",
+			description = "Use only location (ignore scale and rotation)",
+			default     = False
+		)
 	bpy.utils.register_class(SphereFade)
 
 	class VolumeVRayToon(bpy.types.PropertyGroup):
@@ -821,11 +825,13 @@ def write_VolumeVRayToon_from_material(bus):
 	return toon_name
 
 
-def write_SphereFadeGizmo(bus, ob):
+def write_SphereFadeGizmo(bus, SphereFade, ob):
 	scene= bus['scene']
 	ofile= bus['files']['environment']
 
-	tm = mathutils.Matrix.Translation(ob.matrix_world.translation)
+	tm = ob.matrix_world
+	if SphereFade.loc_only:
+		tm = mathutils.Matrix.Translation(ob.matrix_world.translation)
 
 	vray = ob.vray
 	name= "MG%s" % get_name(ob, prefix='EMPTY')
@@ -1031,7 +1037,7 @@ def write(bus):
 
 				elif effect.type == 'SFADE':
 					SphereFade= effect.SphereFade
-					gizmos= [write_SphereFadeGizmo(bus, ob) for ob in generate_object_list(SphereFade.gizmos_objects, SphereFade.gizmos_groups) if object_visible(bus,ob)]
+					gizmos= [write_SphereFadeGizmo(bus, SphereFade, ob) for ob in generate_object_list(SphereFade.gizmos_objects, SphereFade.gizmos_groups) if object_visible(bus,ob)]
 					write_SphereFade(bus, effect, gizmos)
 
 	volumes.reverse()
@@ -1144,7 +1150,7 @@ def WriteSphereFade(bus):
 
 		for ob in generate_object_list(SphereFade.gizmos_objects, SphereFade.gizmos_groups):
 			if object_visible(bus,ob):
-				write_SphereFadeGizmo(bus, ob)
+				write_SphereFadeGizmo(bus, SphereFade, ob)
 
 '''
   GUI
@@ -1305,6 +1311,7 @@ def draw_SphereFade(context, layout, rna_pointer):
 	col.prop(SphereFade, 'empty_color')
 	col.prop(SphereFade, 'affect_alpha')
 	col.prop(SphereFade, 'falloff')
+	col.prop(SphereFade, 'loc_only')
 
 	#col= split.column()
 	col.prop_search(SphereFade, 'gizmos_objects',
@@ -1312,8 +1319,8 @@ def draw_SphereFade(context, layout, rna_pointer):
 					text="Objects")
 	col.prop_search(SphereFade, 'gizmos_groups',
 					bpy.data,       'groups',
-					text="Groups")	
-	
+					text="Groups")
+
 
 def gui(context, layout, VRayEffects):
 	wide_ui= context.region.width > ui.narrowui
