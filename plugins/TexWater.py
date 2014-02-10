@@ -224,17 +224,25 @@ class VRAY_TP_TexWater(ui.VRayTexturePanel, bpy.types.Panel):
 		tex= context.texture
 		TexWater= getattr(tex.vray, PLUG)
 
-		split= layout.split()
-		col= split.column(align= True)
-		col.prop(TexWater, 'height_mult', text="Height Multiplier")
+		layout.prop(TexWater, 'height_mult', text="Height Multiplier")
+
+		split = layout.split()
+		col = split.column(align=True)
 		col.prop(TexWater, 'wind_direction', text="Wind Direction")
 		col.prop(TexWater, 'wind_magnitude', text="Wind Magnitude")
 		col.prop(TexWater, 'wind_direction_mult', text="Wind Magnitude Multiplier")
+
+		split = layout.split()
+		col = split.column(align=True)
 		col.prop(TexWater, 'choppy_mult', text="Choppy Multiplier")
 		col.prop(TexWater, 'movement_rate', text="Rate")
-		col.prop(TexWater, 'seed', text="Seed")
+
+		split = layout.split()
+		col = split.column(align=True)
 		col.prop(TexWater, 'resolution', text="Resolution")
 		col.prop(TexWater, 'patch_size', text="Patch size")
+
+		layout.prop(TexWater, 'seed', text="Seed")
 
 
 def GetRegClasses():
