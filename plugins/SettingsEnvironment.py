@@ -829,9 +829,13 @@ def write_SphereFadeGizmo(bus, SphereFade, ob):
 	scene= bus['scene']
 	ofile= bus['files']['environment']
 
-	tm = ob.matrix_world
-	if SphereFade.loc_only:
-		tm = mathutils.Matrix.Translation(ob.matrix_world.translation)
+	tm = mathutils.Matrix.Translation(ob.matrix_world.translation)
+
+	if not SphereFade.loc_only:
+		sca  = ob.matrix_world.to_scale()
+		tm[0][0] = sca[0]
+		tm[1][1] = sca[1]
+		tm[2][2] = sca[2]
 
 	vray = ob.vray
 	name= "MG%s" % get_name(ob, prefix='EMPTY')
