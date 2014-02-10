@@ -656,7 +656,7 @@ class VRAY_TP_Tiling(ui.VRayTexturePanel, bpy.types.Panel):
 		wide_ui= context.region.width > ui.narrowui
 		layout= self.layout
 
-		idblock = context_tex_datablock(context)
+		idblock = ui.context_tex_datablock(context)
 
 		ob=   context.object
 		sce=  context.scene
