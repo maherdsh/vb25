@@ -1016,6 +1016,7 @@ def write_lamp(bus):
 			ofile.write("\n\tshadowSubdivs= %s;"%(a(scene,VRayLamp.subdivs)))
 		elif param == 'shadowRadius' and lamp_type == 'LightDirectMax':
 			ofile.write("\n\t%s= %s;" % (param, a(scene,VRayLamp.shadowRadius)))
+			ofile.write("\n\tshadowShape=1;")
 			ofile.write("\n\tshadowRadius1= %s;" % a(scene,VRayLamp.shadowRadius))
 			ofile.write("\n\tshadowRadius2= %s;" % a(scene,VRayLamp.shadowRadius))
 		elif param == 'intensity' and lamp_type == 'LightIESMax':
