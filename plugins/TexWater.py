@@ -100,7 +100,7 @@ def add_properties(rna_pointer):
 			soft_min    = 0.0,
 			soft_max    = 10.0,
 			precision   = 3,
-			default     = 0
+			default     = 800
 		)
 
 		#  wind_direction_mult: float = 0
@@ -136,7 +136,7 @@ def add_properties(rna_pointer):
 			soft_min    = 0.0,
 			soft_max    = 10.0,
 			precision   = 3,
-			default     = 0
+			default     = 1.0
 		)
 
 		# seed: integer = 1, Used to produce different waters
@@ -158,7 +158,7 @@ def add_properties(rna_pointer):
 			max         = 10000,
 			soft_min    = 0,
 			soft_max    = 10,
-			default     = 4
+			default     = 512
 		)
 
 		# patch_size: float = 128, Size of the patch -> real resolution is 2^res
