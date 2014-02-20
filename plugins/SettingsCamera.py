@@ -126,15 +126,17 @@ def write(bus):
 	fov = VRayCamera.fov if VRayCamera.override_fov else camera.data.angle
 
 	aspect = scene.render.resolution_x / scene.render.resolution_y
+	orthoWidth = camera.data.ortho_scale
 
 	if aspect < 1.0:
 		fov = fov * aspect
+		orthoWidth = float(orthoWidth) * aspect
 
 	ofile.write("\n// Camera: %s" % (camera.name))
 	ofile.write("\nSettingsCamera CA%s {" % clean_string(camera.name))
 	if camera.data.type == 'ORTHO':
-		ofile.write("\n\ttype=7;")
-		ofile.write("\n\theight=%s;" % a(scene, camera.data.ortho_scale))
+		ofile.write("\n\ttype=0;")
+		ofile.write("\n\theight=%s;" % a(scene, orthoWidth))
 	else:
 		ofile.write("\n\ttype=%i;" % TYPE[SettingsCamera.type])
 	ofile.write("\n\tfov=-1;")

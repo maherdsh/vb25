@@ -83,9 +83,11 @@ def write(bus):
 		fov = VRayCamera.fov if VRayCamera.override_fov else camera.data.angle
 
 		aspect = float(scene.render.resolution_x) / float(scene.render.resolution_y)
+		orthoWidth = camera.data.ortho_scale
 
 		if aspect < 1.0:
-			fov = fov * aspect
+			fov        = fov * aspect
+			orthoWidth = float(orthoWidth) * aspect
 
 		tm = camera.matrix_world.normalized()
 
@@ -101,5 +103,5 @@ def write(bus):
 				ofile.write("\n\tclipping_far=%s;" % a(scene, camera.data.clip_end))
 		if camera.data.type == 'ORTHO':
 			ofile.write("\n\torthographic=1;")
-			ofile.write("\n\torthographicWidth=%s;" % a(scene, camera.data.ortho_scale))
+			ofile.write("\n\torthographicWidth=%s;" % a(scene, orthoWidth))
 		ofile.write("\n}\n")
